@@ -1,9 +1,9 @@
 /* ══════════════════════════════════════════════════════════════════════════
    POCKET SKIN — a late-80s handheld that never existed.
 
-   The handheld itself (warm gray plastic, the LCD, the buttons) lives in
-   pocket.css. Around it, the rest of the app is the charcoal of its bezel,
-   and every list is another little LCD: rooms and the queue are menus with
+   The handheld itself (the LCD, the buttons) lives in pocket.css. The
+   rest of the app is moulded from the same warm gray plastic, printed in
+   the same navy-gray, and every list is another little LCD: rooms and the queue are menus with
    a cursor, favourites are cartridges. Everything is keyed off
    [data-skin='pocket'] on <html>.
 
@@ -31,22 +31,24 @@
   --pixel: 'Jersey 10', 'Menlo', monospace;
   --printed: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
 
-  /* ── Hi-fi tokens, re-pointed: the case is charcoal, the ink warm gray ── */
-  --bg-deep: #1f1f23;
-  --bg: var(--charcoal);
-  --bg-raised: var(--charcoal-2);
-  --walnut: var(--charcoal-3);
-  --walnut-light: #55555d;
+  /* ── Hi-fi tokens, re-pointed: the whole case is the handheld's warm gray
+     plastic, and the ink is the navy-gray its legends are printed in ──── */
+  --bg-deep: #c2bcb0;
+  --bg: var(--plastic);
+  --bg-raised: #d6d1c6;
+  --walnut: #b3ada0;
+  --walnut-light: #beb8ac;
 
-  --cream: #e6e2d8;
-  --cream-dim: #b9b5ab;
-  --cream-faint: rgba(230, 226, 216, 0.5);
-  --cream-ghost: rgba(230, 226, 216, 0.13);
+  --ink: #2d3040;
+  --cream: var(--ink);
+  --cream-dim: #4a4e60;
+  --cream-faint: rgba(45, 48, 64, 0.62);
+  --cream-ghost: rgba(45, 48, 64, 0.14);
 
-  /* "Active" is the screen's own green, lit. */
-  --amber: #b9cc84;
-  --amber-hot: #d3e2a0;
-  --amber-glow: rgba(185, 204, 132, 0.3);
+  /* "Active" is the green the name is printed in. */
+  --amber: #2f6b4a;
+  --amber-hot: #24573b;
+  --amber-glow: rgba(47, 107, 74, 0.22);
 
   --rust: #e0574a;
   --burgundy: var(--button);
@@ -59,8 +61,8 @@
 
   --radius: 4px;
 
-  --sink: inset 0 1px 2px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
-  --lift: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.06);
+  --sink: inset 0 1px 2px rgba(60, 50, 40, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+  --lift: 0 2px 8px rgba(60, 50, 40, 0.25), 0 0 0 0.5px rgba(60, 50, 40, 0.12);
 }
 
 [data-skin='pocket'] body {
@@ -98,17 +100,20 @@
   background: var(--bg-deep);
 }
 
+/* The rails are moulded plastic too, a parting line where they meet the stage. */
 [data-skin='pocket'] .rooms,
 [data-skin='pocket'] .right-rail {
-  background: linear-gradient(180deg, #2e2e33, #26262a);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #d2cdc2, #c4beb2);
 }
 
 [data-skin='pocket'] .rooms {
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.6), 10px 0 26px rgba(0, 0, 0, 0.4);
+  box-shadow: inset -1px 0 0 rgba(60, 50, 40, 0.22), inset -2px 0 0 rgba(255, 255, 255, 0.35);
 }
 
 [data-skin='pocket'] .right-rail {
-  box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.6), -10px 0 26px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 1px 0 0 rgba(60, 50, 40, 0.22), inset 2px 0 0 rgba(255, 255, 255, 0.35);
 }
 
 /* No lamp light, no film: a screen, not a photograph. */
@@ -366,7 +371,7 @@
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.5),
     inset 0 3px 0 rgba(0, 0, 0, 0.08),
-    0 -16px 32px rgba(0, 0, 0, 0.45);
+    0 -10px 24px rgba(60, 48, 36, 0.2);
 }
 
 [data-skin='pocket'] .faceplate::before {
@@ -495,13 +500,13 @@
   box-shadow: 0 0 6px rgba(255, 59, 43, 0.7);
 }
 
-/* ── Curtains, search and settings: the case's charcoal ────────────────── */
+/* ── Curtains, search and settings: the same gray plastic ──────────────── */
 
 [data-skin='pocket'] .curtain,
 [data-skin='pocket'] .boundary {
   background:
-    radial-gradient(80% 60% at 50% 42%, rgba(255, 255, 255, 0.05), transparent 70%),
-    linear-gradient(180deg, #2b2b30, #1f1f23);
+    radial-gradient(80% 60% at 50% 42%, rgba(255, 255, 255, 0.25), transparent 70%),
+    linear-gradient(180deg, #d2cdc2, #c2bcb0);
 }
 
 [data-skin='pocket'] .curtain-title,
@@ -511,13 +516,30 @@
 
 [data-skin='pocket'] .search-scrim {
   background:
-    radial-gradient(78% 58% at 50% 6%, rgba(255, 255, 255, 0.05), transparent 72%),
-    rgba(22, 22, 26, 0.975);
+    radial-gradient(78% 58% at 50% 6%, rgba(255, 255, 255, 0.3), transparent 72%),
+    rgba(200, 194, 182, 0.97);
 }
 
 [data-skin='pocket'] .linkcard {
-  background: var(--charcoal-2);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px rgba(60, 50, 40, 0.16), 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Buttons the base styles paint dark-on-amber or on dark walnut. */
+[data-skin='pocket'] .linkcard-btn {
+  color: #eef2e4;
+}
+
+[data-skin='pocket'] .sresult-tool,
+[data-skin='pocket'] .crate-tool {
+  color: var(--ink);
+  background: rgba(214, 209, 198, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(60, 50, 40, 0.2), 0 1px 3px rgba(60, 50, 40, 0.25);
+}
+
+[data-skin='pocket'] .sresult-tool:hover,
+[data-skin='pocket'] .crate-tool:hover {
+  color: var(--amber);
 }
 
 [data-skin='pocket'] .settings-title,
@@ -532,7 +554,7 @@
 /* ── Scrollbars, selection, focus ──────────────────────────────────────── */
 
 [data-skin='pocket'] .scroll::-webkit-scrollbar-thumb {
-  background: rgba(230, 226, 216, 0.18);
+  background: rgba(45, 48, 64, 0.22);
 }
 
 [data-skin='pocket'] ::selection {
@@ -545,7 +567,7 @@
   outline-offset: 2px;
 }
 
-/* The phone's header strip is charcoal, not glass. */
+/* The phone's header strip is plastic, not glass. */
 [data-skin='pocket'] .phone-head .room-name {
   font-family: var(--pixel);
   font-size: 22px;
