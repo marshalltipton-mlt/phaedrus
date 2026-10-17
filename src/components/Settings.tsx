@@ -362,7 +362,7 @@ const LOOK: Record<Skin, { ground: string; ink: string; font: CSSProperties; str
   pocket: {
     ground: 'linear-gradient(180deg, #cdc8bd, #b3ada1)',
     ink: '#24361f',
-    font: { fontFamily: "'Jersey 10', monospace", fontWeight: 400, fontSize: '1.3em' },
+    font: { fontFamily: "'Jersey 10', monospace", fontWeight: 400, fontSize: '43px' },
     strip: ['#c9c4b9', '#3d3e44', '#bccb8c', '#4f6a45', '#b0413e'],
   },
 };
