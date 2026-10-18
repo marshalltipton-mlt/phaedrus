@@ -148,8 +148,9 @@ function useTrackScroll(key: string | undefined, length: number, run: boolean, r
 
   useEffect(() => {
     if (key === last.current) return;
+    const first = last.current === undefined; // the first track to arrive isn't a change
     last.current = key;
-    setOffset(key && !reduced ? 0 : null);
+    setOffset(key && !first && !reduced ? 0 : null);
   }, [key, reduced]);
 
   useEffect(() => {

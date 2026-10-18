@@ -99,9 +99,9 @@
   inset: 0;
   z-index: 5;
   border-radius: inherit;
-  background: url('./putty/noise-dark.svg');
-  opacity: 0.11;
-  mix-blend-mode: multiply;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
   pointer-events: none;
 }
 
@@ -270,8 +270,8 @@
   position: relative;
   isolation: isolate;
   border-radius: 12px;
-  background: radial-gradient(circle at 30% 20%, #4a4943, var(--pt-graphite) 70%);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: var(--pt-panel);
+  box-shadow: var(--pt-panel-sink);
 }
 
 /* Light grain on the dark panel. */
@@ -441,7 +441,7 @@ html[data-shell='phone'] .pt-head {
 }
 
 html[data-shell='phone'] .pt-art {
-  box-shadow: 0 22px 40px -18px rgba(120, 60, 30, 0.55), 0 4px 8px rgba(60, 50, 35, 0.15);
+  box-shadow: var(--pt-art-shadow);
 }
 
 html[data-shell='phone'] .pt-type {
@@ -525,7 +525,7 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   min-width: 0;
   padding: 10px 12px;
   border-radius: 9px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--pt-panel-sink);
 }
 
 /* ── Phone queue page: the mini-player above the list ────────────────── */
@@ -550,9 +550,9 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   inset: 0;
   z-index: 5;
   border-radius: inherit;
-  background: url('./putty/noise-dark.svg');
-  opacity: 0.11;
-  mix-blend-mode: multiply;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
   pointer-events: none;
 }
 
@@ -605,7 +605,7 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   height: 4px;
   margin-top: 5px;
   border-radius: 2px;
-  background: #c3bdb2;
+  background: var(--pt-slot);
   overflow: hidden;
 }
 
@@ -624,14 +624,14 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   height: 48px;
   border-radius: 8px;
   color: var(--pt-ink);
-  background: linear-gradient(180deg, #c9c4ba, #b7b1a6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #9c968b;
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
   transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
 }
 
 .pt-mini-key:active {
   transform: translateY(2px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 0 #9c968b;
+  box-shadow: var(--pt-play-down);
 }
 
 /* ── Phone rooms page: the volume module under the room list ─────────── */
@@ -641,7 +641,7 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   isolation: isolate;
   flex: none;
   margin-top: 12px;
-  background: linear-gradient(165deg, #ece8e0, #e3dfd6 60%, #d9d4ca);
+  background: var(--pt-rail);
   box-shadow: var(--pt-module-lift);
 }
 
@@ -651,8 +651,8 @@ html[data-shell='phone'] .pt-pocket .knob-pointer {
   inset: 0;
   z-index: 5;
   border-radius: inherit;
-  background: url('./putty/noise-dark.svg');
-  opacity: 0.11;
-  mix-blend-mode: multiply;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
   pointer-events: none;
 }

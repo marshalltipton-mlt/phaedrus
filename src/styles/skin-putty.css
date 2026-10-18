@@ -66,6 +66,47 @@
   --pt-tray: #cfcac0;
   --pt-tray-sink: inset 0 2px 4px rgba(60, 50, 35, 0.25);
   --pt-art-shadow: 0 24px 44px -18px rgba(120, 60, 30, 0.55), 0 4px 8px rgba(60, 50, 35, 0.15);
+  --pt-rail: linear-gradient(170deg, #ece8e0, #e3dfd6 55%, #dad5cb);
+  --pt-key-up-2: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac;
+  --pt-key-up-3: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac;
+  --pt-key-down-1: inset 0 1px 0 #fff, 0 1px 0 #bdb7ac;
+  --pt-key-soft: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac, 0 6px 10px -4px rgba(60, 50, 35, 0.3);
+  --pt-key-tool: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac, 0 4px 8px -4px rgba(60, 50, 35, 0.4);
+  --pt-chip-up: inset 0 1px 0 #fff, 0 3px 0 #c6c0b5;
+  --pt-chip-down: inset 0 1px 0 #fff, 0 1px 0 #c6c0b5;
+  --pt-smallkey: #d6d1c7;
+  --pt-smallkey-up: 0 2px 0 #bdb7ac;
+  --pt-smallkey-down: 0 1px 0 #bdb7ac;
+  --pt-play: linear-gradient(180deg, #c9c4ba, #b7b1a6);
+  --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #9c968b, 0 6px 10px -4px rgba(60, 50, 35, 0.35);
+  --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 0 #9c968b, 0 2px 4px -2px rgba(60, 50, 35, 0.35);
+  --pt-slot: #c3bdb2;
+  --pt-fader-slot: #b9b3a8;
+  --pt-slot-sink: inset 0 1px 2px rgba(40, 30, 20, 0.3);
+  --pt-cap: linear-gradient(180deg, #faf8f4, #e2ddd4);
+  --pt-cap-lift: 0 4px 8px -2px rgba(60, 50, 35, 0.4), inset 0 1px 0 #fff;
+  --pt-cap-lift-hover: 0 6px 10px -2px rgba(60, 50, 35, 0.45), inset 0 1px 0 #fff;
+  --pt-thumb: #faf8f4;
+  --pt-thumb-lift: 0 2px 5px rgba(60, 50, 35, 0.4);
+  --pt-tick: var(--pt-stone);
+  --pt-tick-major: #6f6a62;
+  --pt-panel: radial-gradient(circle at 30% 20%, #4a4943, #3b3a36 70%);
+  --pt-panel-sink: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.6);
+  --pt-sleeve-shadow: 0 10px 18px -10px rgba(60, 50, 35, 0.5), 0 2px 4px rgba(60, 50, 35, 0.12);
+  --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(60, 50, 35, 0.55), 0 2px 4px rgba(60, 50, 35, 0.14);
+  --pt-thumbnail-shadow: 0 3px 6px -2px rgba(60, 50, 35, 0.35);
+  --pt-dot-sink: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  --pt-hover: rgba(255, 255, 255, 0.28);
+  --pt-ink-wash: rgba(42, 41, 36, 0.06);
+  --pt-ink-off: rgba(42, 41, 36, 0.28);
+  --pt-scrim: rgba(238, 235, 228, 0.97);
+  --pt-scroll-thumb: rgba(42, 41, 36, 0.18);
+
+  /* Grain: dark specks multiplied into a light surface. Night swaps in light
+     specks, screened, a little stronger. */
+  --pt-grain: url('./putty/noise-dark.svg');
+  --pt-grain-opacity: 0.11;
+  --pt-grain-blend: multiply;
 
   /* ── Hi-Fi tokens, re-pointed ─────────────────────────────────────────── */
   --bg-deep: #eeebe4;
@@ -164,9 +205,9 @@
   inset: 0;
   z-index: 5;
   border-radius: inherit;
-  background: url('./putty/noise-dark.svg');
-  opacity: 0.11;
-  mix-blend-mode: multiply;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
   pointer-events: none;
 }
 
@@ -195,7 +236,7 @@
 
 [data-skin='putty'] .rooms,
 [data-skin='putty'] .right-rail {
-  background: linear-gradient(170deg, #ece8e0, #e3dfd6 55%, #dad5cb);
+  background: var(--pt-rail);
   z-index: auto;
 }
 
@@ -244,27 +285,27 @@
   color: var(--pt-ink-2);
   padding: 5px 9px;
   border-radius: 6px;
-  background: #d6d1c7;
-  box-shadow: 0 2px 0 #bdb7ac;
+  background: var(--pt-smallkey);
+  box-shadow: var(--pt-smallkey-up);
   transition: transform 120ms var(--ease), box-shadow 120ms var(--ease), color var(--t) var(--ease);
 }
 
 [data-skin='putty'] .rooms-arrange:hover,
 [data-skin='putty'] .panel-action:hover {
   color: var(--pt-ink);
-  background: #d6d1c7;
+  background: var(--pt-smallkey);
 }
 
 [data-skin='putty'] .rooms-arrange:active,
 [data-skin='putty'] .panel-action:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 0 #bdb7ac;
+  box-shadow: var(--pt-smallkey-down);
 }
 
 [data-skin='putty'] .rooms-arrange.is-on {
   color: var(--pt-ink);
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac;
+  box-shadow: var(--pt-key-up-2);
 }
 
 [data-skin='putty'] .panel-action.is-armed {
@@ -290,7 +331,7 @@
 }
 
 [data-skin='putty'] .room:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--pt-hover);
 }
 
 [data-skin='putty'] .room.is-selected {
@@ -321,7 +362,7 @@
   height: 10px;
   border-radius: 50%;
   background: var(--room-dot, var(--pt-stone));
-  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--pt-dot-sink);
 }
 
 
@@ -371,7 +412,7 @@
   padding: 0;
   border-radius: 10px;
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac, 0 6px 10px -4px rgba(60, 50, 35, 0.3);
+  box-shadow: var(--pt-key-soft);
   transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
 }
 
@@ -436,7 +477,7 @@
 }
 
 [data-skin='putty'] .switch-thumb {
-  background: linear-gradient(180deg, #faf8f4, #e2ddd4);
+  background: var(--pt-cap);
   box-shadow: 0 2px 4px rgba(60, 50, 35, 0.4), inset 0 1px 0 #fff;
 }
 
@@ -474,7 +515,7 @@
 [data-skin='putty'] .right-tab.is-active {
   color: var(--pt-ink);
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac;
+  box-shadow: var(--pt-key-up-2);
 }
 
 [data-skin='putty'] .right-tab.is-active::after {
@@ -487,7 +528,7 @@
   border-radius: 10px;
   color: var(--pt-ink);
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac;
+  box-shadow: var(--pt-key-up-3);
   transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
 }
 
@@ -498,7 +539,7 @@
 
 [data-skin='putty'] .right-search:active {
   transform: translateY(2px);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 0 #bdb7ac;
+  box-shadow: var(--pt-key-down-1);
 }
 
 /* ── Queue ─────────────────────────────────────────────────────────────── */
@@ -545,7 +586,7 @@
 }
 
 [data-skin='putty'] .qrow:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--pt-hover);
 }
 
 [data-skin='putty'] .qrow.is-current {
@@ -587,7 +628,7 @@
   border-radius: 6px;
   overflow: hidden;
   background: var(--pt-fog);
-  box-shadow: 0 3px 6px -2px rgba(60, 50, 35, 0.35);
+  box-shadow: var(--pt-thumbnail-shadow);
 }
 
 [data-skin='putty'] .qrow-art img,
@@ -657,12 +698,12 @@
 [data-skin='putty'] .crate-face {
   border-radius: 8px;
   background: var(--pt-fog);
-  box-shadow: 0 10px 18px -10px rgba(60, 50, 35, 0.5), 0 2px 4px rgba(60, 50, 35, 0.12);
+  box-shadow: var(--pt-sleeve-shadow);
 }
 
 [data-skin='putty'] .crate-item:hover .crate-face:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 14px 22px -10px rgba(60, 50, 35, 0.55), 0 2px 4px rgba(60, 50, 35, 0.14);
+  box-shadow: var(--pt-sleeve-shadow-hover);
 }
 
 [data-skin='putty'] .crate-item:hover .crate-face img {
@@ -687,7 +728,7 @@
   background: linear-gradient(140deg, var(--pt-blush), var(--pt-tangerine));
 }
 [data-skin='putty'] .ground-wine {
-  background: radial-gradient(circle at 30% 20%, #4a4943, #3b3a36 70%);
+  background: var(--pt-panel);
 }
 
 /* The title shows once, under the sleeve, never on it as well. */
@@ -754,7 +795,7 @@
 [data-skin='putty'] .sresult-tool {
   color: var(--pt-ink);
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac, 0 4px 8px -4px rgba(60, 50, 35, 0.4);
+  box-shadow: var(--pt-key-tool);
 }
 
 [data-skin='putty'] .crate-tool:hover,
@@ -812,8 +853,8 @@
 [data-skin='putty'] .progress-groove {
   inset: 8px 0;
   border-radius: 3px;
-  background: #c3bdb2;
-  box-shadow: inset 0 1px 2px rgba(40, 30, 20, 0.3);
+  background: var(--pt-slot);
+  box-shadow: var(--pt-slot-sink);
 }
 
 [data-skin='putty'] .progress-played {
@@ -831,8 +872,8 @@
   height: 16px;
   margin-left: -8px;
   border-radius: 50%;
-  background: #faf8f4;
-  box-shadow: 0 2px 5px rgba(60, 50, 35, 0.4);
+  background: var(--pt-thumb);
+  box-shadow: var(--pt-thumb-lift);
 }
 
 [data-skin='putty'] .progress-live .label {
@@ -847,8 +888,8 @@
 [data-skin='putty'] .progress-live-rule {
   height: 6px;
   border-radius: 3px;
-  background: #c3bdb2;
-  box-shadow: inset 0 1px 2px rgba(40, 30, 20, 0.3);
+  background: var(--pt-slot);
+  box-shadow: var(--pt-slot-sink);
 }
 
 /* ── Transport: a row of keycaps in a tray ─────────────────────────────── */
@@ -889,8 +930,8 @@
 [data-skin='putty'] .tactile-lg.is-playing {
   flex: 2;
   color: var(--pt-ink);
-  background: linear-gradient(180deg, #c9c4ba, #b7b1a6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #9c968b, 0 6px 10px -4px rgba(60, 50, 35, 0.35);
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
 }
 
 [data-skin='putty'] .tactile:hover:not(:disabled),
@@ -901,8 +942,8 @@
 }
 
 [data-skin='putty'] .tactile-lg:hover:not(:disabled) {
-  background: linear-gradient(180deg, #c9c4ba, #b7b1a6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #9c968b, 0 6px 10px -4px rgba(60, 50, 35, 0.35);
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
 }
 
 /* A keycap nudges down 2px when pressed. */
@@ -913,12 +954,12 @@
 }
 
 [data-skin='putty'] .tactile-lg:active:not(:disabled) {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 0 #9c968b, 0 2px 4px -2px rgba(60, 50, 35, 0.35);
+  box-shadow: var(--pt-play-down);
 }
 
 [data-skin='putty'] .tactile:disabled,
 [data-skin='putty'] .mod:disabled {
-  color: rgba(42, 41, 36, 0.28);
+  color: var(--pt-ink-off);
   box-shadow: var(--pt-key-up);
 }
 
@@ -973,13 +1014,13 @@
 [data-skin='putty'] .knob-tick.is-lit,
 [data-skin='putty'] .knob-tick.is-major,
 [data-skin='putty'] .knob-tick.is-major.is-lit {
-  stroke: var(--pt-stone);
+  stroke: var(--pt-tick);
   stroke-width: 1.4;
 }
 
 [data-skin='putty'] .knob-tick:nth-child(10n + 1),
 [data-skin='putty'] .knob-tick.is-lit:nth-child(10n + 1) {
-  stroke: #6f6a62;
+  stroke: var(--pt-tick-major);
   stroke-width: 1.8;
 }
 
@@ -1065,7 +1106,7 @@
 
 [data-skin='putty'] .fader-mute:hover {
   color: var(--pt-ink);
-  background: rgba(42, 41, 36, 0.06);
+  background: var(--pt-ink-wash);
 }
 
 [data-skin='putty'] .fader.is-muted .fader-mute {
@@ -1094,7 +1135,7 @@
   height: 10px;
   border-radius: 50%;
   background: var(--room-dot, var(--pt-stone));
-  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--pt-dot-sink);
 }
 
 
@@ -1118,8 +1159,8 @@
 [data-skin='putty'] .fader-slot {
   inset: 13px 0;
   border-radius: 3px;
-  background: #b9b3a8;
-  box-shadow: inset 0 1px 2px rgba(40, 30, 20, 0.35);
+  background: var(--pt-fader-slot);
+  box-shadow: var(--pt-slot-sink);
 }
 
 [data-skin='putty'] .fader-fill {
@@ -1131,8 +1172,8 @@
   height: 28px;
   margin-left: -10px;
   border-radius: 5px;
-  background: linear-gradient(180deg, #faf8f4, #e2ddd4);
-  box-shadow: 0 4px 8px -2px rgba(60, 50, 35, 0.4), inset 0 1px 0 #fff;
+  background: var(--pt-cap);
+  box-shadow: var(--pt-cap-lift);
 }
 
 [data-skin='putty'] .fader-cap::after {
@@ -1145,7 +1186,7 @@
 
 [data-skin='putty'] .fader-rail:hover .fader-cap,
 [data-skin='putty'] .fader-rail.is-dragging .fader-cap {
-  box-shadow: 0 6px 10px -2px rgba(60, 50, 35, 0.45), inset 0 1px 0 #fff;
+  box-shadow: var(--pt-cap-lift-hover);
 }
 
 [data-skin='putty'] .fader.is-muted .fader-cap {
@@ -1220,7 +1261,7 @@
 }
 
 [data-skin='putty'] .search-scrim {
-  background: rgba(238, 235, 228, 0.97);
+  background: var(--pt-scrim);
 }
 
 [data-skin='putty'] .linkcard {
@@ -1268,7 +1309,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   color: var(--pt-led);
-  background: radial-gradient(circle at 30% 20%, #4a4943, var(--pt-graphite) 70%);
+  background: var(--pt-panel);
   border-radius: 10px;
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 10px 24px -10px rgba(60, 50, 35, 0.5);
 }
@@ -1282,7 +1323,7 @@
 /* ── Scrollbars, selection, focus ──────────────────────────────────────── */
 
 [data-skin='putty'] .scroll::-webkit-scrollbar-thumb {
-  background: rgba(42, 41, 36, 0.18);
+  background: var(--pt-scroll-thumb);
 }
 
 [data-skin='putty'] ::selection {
@@ -1293,6 +1334,302 @@
 [data-skin='putty'] :focus-visible {
   outline: 2px solid var(--pt-tangerine);
   outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PUTTY NIGHT — warm charcoal with the same pops. Follows the system's
+   appearance (prefers-color-scheme) unless Settings pins light or Night
+   (html[data-putty-mode]). Every colour above goes through a --pt-* token,
+   so Night is this one block of tokens, written twice (pinned, and auto in
+   the dark), plus a little restrained glow on the lit things.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+[data-skin='putty'][data-putty-mode='night'] {
+
+  color-scheme: dark;
+
+  --pt-paper: #1e1d1a;
+  --pt-shell: #28261f;
+  --pt-fog: #181714;
+  --pt-stone: #5a5750;
+  --pt-graphite: #121110;
+  --pt-ink: #ece7dd;
+  --pt-ink-2: #a39d92;
+  --pt-led-off: rgba(255, 255, 255, 0.05);
+  --pt-hole-color: #3c3a35;
+  --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+
+  --pt-module: linear-gradient(165deg, #302e2a, #28261f 60%, #211f1b);
+  --pt-module-lift: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 28px -12px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.35);
+  --pt-rail: linear-gradient(170deg, #302e2a, #28261f 55%, #211f1b);
+  --pt-key: linear-gradient(180deg, #3e3c37, #312f2b);
+  --pt-key-up: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+  --pt-key-down: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --pt-key-up-2: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311;
+  --pt-key-up-3: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311;
+  --pt-key-down-1: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311;
+  --pt-key-soft: var(--pt-key-up);
+  --pt-key-tool: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311, 0 4px 8px -4px rgba(0, 0, 0, 0.6);
+  --pt-raised: linear-gradient(180deg, #3b3934, #322f2b);
+  --pt-raised-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513, 0 8px 14px -8px rgba(0, 0, 0, 0.6);
+  --pt-chip-up: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513;
+  --pt-chip-down: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #161513;
+  --pt-tray: #181714;
+  --pt-tray-sink: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-smallkey: #2b2925;
+  --pt-smallkey-up: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 #141311;
+  --pt-smallkey-down: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #141311;
+  --pt-play: linear-gradient(180deg, #55524b, #46433d);
+  --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+  --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --pt-slot: #151412;
+  --pt-fader-slot: #151412;
+  --pt-slot-sink: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-cap: linear-gradient(180deg, #56534c, #423f3a);
+  --pt-cap-lift: 0 4px 8px -2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --pt-cap-lift-hover: 0 6px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --pt-thumb: #ece7dd;
+  --pt-thumb-lift: 0 2px 5px rgba(0, 0, 0, 0.6);
+  --pt-tick: #5a5750;
+  --pt-tick-major: #8a857c;
+  --pt-panel: radial-gradient(circle at 30% 20%, #1f1e1b, #121110 70%);
+  --pt-panel-sink: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-art-shadow: 0 24px 44px -16px rgba(0, 0, 0, 0.85), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --pt-sleeve-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35);
+  --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(0, 0, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --pt-thumbnail-shadow: 0 3px 6px -2px rgba(0, 0, 0, 0.6);
+  --pt-hover: rgba(255, 255, 255, 0.04);
+  --pt-ink-wash: rgba(236, 231, 221, 0.06);
+  --pt-ink-off: rgba(236, 231, 221, 0.28);
+  --pt-scrim: rgba(30, 29, 26, 0.97);
+  --pt-scroll-thumb: rgba(236, 231, 221, 0.18);
+
+  --pt-grain: url('./putty/noise-light.svg');
+  --pt-grain-opacity: 0.17;
+  --pt-grain-blend: screen;
+
+  --bg-deep: #1e1d1a;
+  --bg: #1e1d1a;
+  --bg-raised: #28261f;
+  --walnut: #181714;
+  --walnut-light: #302e2a;
+  --cream: #ece7dd;
+  --cream-dim: #a39d92;
+  --cream-faint: #7d786e;
+  --cream-ghost: rgba(236, 231, 221, 0.12);
+  --wine: #121110;
+}
+
+/* A restrained glow on the lit things. */
+[data-skin='putty'][data-putty-mode='night'] .faceplate .knob-body,
+[data-skin='putty'][data-putty-mode='night'] .pt-volume .knob-body {
+  box-shadow:
+    0 0 28px -4px rgba(232, 121, 79, 0.35),
+    0 14px 26px -10px rgba(0, 0, 0, 0.8),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .pt-pocket .knob-body {
+  box-shadow:
+    0 0 20px -4px rgba(232, 121, 79, 0.35),
+    0 10px 18px -8px rgba(0, 0, 0, 0.8),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .pt-dot-on {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--led-on) 75%, transparent));
+}
+
+[data-skin='putty'][data-putty-mode='night'] .progress-played {
+  box-shadow: 0 0 8px rgba(232, 121, 79, 0.45);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .putty.is-playing .pt-led {
+  box-shadow: 0 0 0 2px rgba(141, 170, 130, 0.18), 0 0 8px rgba(141, 170, 130, 0.6);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .room.is-selected::after {
+  box-shadow: 0 0 8px rgba(232, 121, 79, 0.7);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .room-marker,
+[data-skin='putty'][data-putty-mode='night'] .fader-name::before,
+[data-skin='putty'][data-putty-mode='night'] .phone-room-marker {
+  box-shadow: 0 0 6px -1px var(--room-dot, transparent);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .mod.is-on::after {
+  box-shadow: 0 0 6px rgba(232, 121, 79, 0.6);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .crate-bill-mark {
+  color: rgba(236, 231, 221, 0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-skin='putty']:not([data-putty-mode='light']) {
+
+    color-scheme: dark;
+
+    --pt-paper: #1e1d1a;
+    --pt-shell: #28261f;
+    --pt-fog: #181714;
+    --pt-stone: #5a5750;
+    --pt-graphite: #121110;
+    --pt-ink: #ece7dd;
+    --pt-ink-2: #a39d92;
+    --pt-led-off: rgba(255, 255, 255, 0.05);
+    --pt-hole-color: #3c3a35;
+    --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+
+    --pt-module: linear-gradient(165deg, #302e2a, #28261f 60%, #211f1b);
+    --pt-module-lift: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 28px -12px rgba(0, 0, 0, 0.7),
+      0 2px 4px rgba(0, 0, 0, 0.35);
+    --pt-rail: linear-gradient(170deg, #302e2a, #28261f 55%, #211f1b);
+    --pt-key: linear-gradient(180deg, #3e3c37, #312f2b);
+    --pt-key-up: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+    --pt-key-down: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+    --pt-key-up-2: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311;
+    --pt-key-up-3: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311;
+    --pt-key-down-1: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311;
+    --pt-key-soft: var(--pt-key-up);
+    --pt-key-tool: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311, 0 4px 8px -4px rgba(0, 0, 0, 0.6);
+    --pt-raised: linear-gradient(180deg, #3b3934, #322f2b);
+    --pt-raised-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513, 0 8px 14px -8px rgba(0, 0, 0, 0.6);
+    --pt-chip-up: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513;
+    --pt-chip-down: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #161513;
+    --pt-tray: #181714;
+    --pt-tray-sink: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-smallkey: #2b2925;
+    --pt-smallkey-up: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 #141311;
+    --pt-smallkey-down: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #141311;
+    --pt-play: linear-gradient(180deg, #55524b, #46433d);
+    --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+    --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+    --pt-slot: #151412;
+    --pt-fader-slot: #151412;
+    --pt-slot-sink: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-cap: linear-gradient(180deg, #56534c, #423f3a);
+    --pt-cap-lift: 0 4px 8px -2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    --pt-cap-lift-hover: 0 6px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --pt-thumb: #ece7dd;
+    --pt-thumb-lift: 0 2px 5px rgba(0, 0, 0, 0.6);
+    --pt-tick: #5a5750;
+    --pt-tick-major: #8a857c;
+    --pt-panel: radial-gradient(circle at 30% 20%, #1f1e1b, #121110 70%);
+    --pt-panel-sink: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-art-shadow: 0 24px 44px -16px rgba(0, 0, 0, 0.85), 0 4px 8px rgba(0, 0, 0, 0.4);
+    --pt-sleeve-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35);
+    --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(0, 0, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.4);
+    --pt-thumbnail-shadow: 0 3px 6px -2px rgba(0, 0, 0, 0.6);
+    --pt-hover: rgba(255, 255, 255, 0.04);
+    --pt-ink-wash: rgba(236, 231, 221, 0.06);
+    --pt-ink-off: rgba(236, 231, 221, 0.28);
+    --pt-scrim: rgba(30, 29, 26, 0.97);
+    --pt-scroll-thumb: rgba(236, 231, 221, 0.18);
+
+    --pt-grain: url('./putty/noise-light.svg');
+    --pt-grain-opacity: 0.17;
+    --pt-grain-blend: screen;
+
+    --bg-deep: #1e1d1a;
+    --bg: #1e1d1a;
+    --bg-raised: #28261f;
+    --walnut: #181714;
+    --walnut-light: #302e2a;
+    --cream: #ece7dd;
+    --cream-dim: #a39d92;
+    --cream-faint: #7d786e;
+    --cream-ghost: rgba(236, 231, 221, 0.12);
+    --wine: #121110;
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .faceplate .knob-body,
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-volume .knob-body {
+    box-shadow:
+      0 0 28px -4px rgba(232, 121, 79, 0.35),
+      0 14px 26px -10px rgba(0, 0, 0, 0.8),
+      inset 0 2px 1px rgba(255, 255, 255, 0.35),
+      inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-pocket .knob-body {
+    box-shadow:
+      0 0 20px -4px rgba(232, 121, 79, 0.35),
+      0 10px 18px -8px rgba(0, 0, 0, 0.8),
+      inset 0 2px 1px rgba(255, 255, 255, 0.35),
+      inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-dot-on {
+    filter: drop-shadow(0 0 2px color-mix(in srgb, var(--led-on) 75%, transparent));
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .progress-played {
+    box-shadow: 0 0 8px rgba(232, 121, 79, 0.45);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .putty.is-playing .pt-led {
+    box-shadow: 0 0 0 2px rgba(141, 170, 130, 0.18), 0 0 8px rgba(141, 170, 130, 0.6);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .room.is-selected::after {
+    box-shadow: 0 0 8px rgba(232, 121, 79, 0.7);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .room-marker,
+  [data-skin='putty']:not([data-putty-mode='light']) .fader-name::before,
+  [data-skin='putty']:not([data-putty-mode='light']) .phone-room-marker {
+    box-shadow: 0 0 6px -1px var(--room-dot, transparent);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .mod.is-on::after {
+    box-shadow: 0 0 6px rgba(232, 121, 79, 0.6);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .crate-bill-mark {
+    color: rgba(236, 231, 221, 0.7);
+  }
+}
+
+/* Settings: Auto · Light · Night, three keys in a tray. */
+[data-skin='putty'] .pt-mode-row {
+  flex-wrap: wrap;
+}
+
+[data-skin='putty'] .pt-modeseg {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+[data-skin='putty'] .pt-modeseg-opt {
+  min-width: 64px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+  transition: color var(--t) var(--ease), background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+[data-skin='putty'] .pt-modeseg-opt:hover {
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .pt-modeseg-opt.is-on {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-2);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -1320,12 +1657,12 @@ html[data-skin='putty'][data-shell='phone'] .phone-room {
   padding: 0 12px;
   border-radius: 10px;
   background: var(--pt-raised);
-  box-shadow: inset 0 1px 0 #fff, 0 3px 0 #c6c0b5;
+  box-shadow: var(--pt-chip-up);
 }
 
 html[data-skin='putty'][data-shell='phone'] .phone-room:active {
   transform: translateY(2px);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 0 #c6c0b5;
+  box-shadow: var(--pt-chip-down);
 }
 
 html[data-skin='putty'][data-shell='phone'] .phone-room-marker {
@@ -1333,7 +1670,7 @@ html[data-skin='putty'][data-shell='phone'] .phone-room-marker {
   height: 9px;
   border-radius: 50%;
   background: var(--room-dot, var(--pt-stone));
-  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--pt-dot-sink);
 }
 
 html[data-skin='putty'][data-shell='phone'] .phone-room-text {
@@ -1356,7 +1693,7 @@ html[data-skin='putty'][data-shell='phone'] .phone-tool {
   border-radius: 10px;
   color: var(--pt-ink);
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac;
+  box-shadow: var(--pt-key-up-3);
   transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
 }
 
@@ -1369,7 +1706,7 @@ html[data-skin='putty'][data-shell='phone'] .phone-tool:active {
   color: var(--pt-ink);
   background: var(--pt-key);
   transform: translateY(2px);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 0 #bdb7ac;
+  box-shadow: var(--pt-key-down-1);
 }
 
 /* Tab bar: a tray holding four keycap tabs. */
@@ -1408,7 +1745,7 @@ html[data-skin='putty'][data-shell='phone'] .mtab.is-active svg {
 
 html[data-skin='putty'][data-shell='phone'] .mtab.is-active {
   background: var(--pt-key);
-  box-shadow: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac, 0 6px 10px -4px rgba(60, 50, 35, 0.3);
+  box-shadow: var(--pt-key-soft);
 }
 
 html[data-skin='putty'][data-shell='phone'] .mtab.is-active::before {
@@ -1425,7 +1762,7 @@ html[data-skin='putty'][data-shell='phone'] .phone-page > .rooms {
   position: relative;
   isolation: isolate;
   border-radius: 16px;
-  background: linear-gradient(170deg, #ece8e0, #e3dfd6 55%, #dad5cb);
+  background: var(--pt-rail);
   box-shadow: var(--pt-module-lift);
   overflow: hidden;
 }

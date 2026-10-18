@@ -12,6 +12,7 @@ import './styles/skin-prism.css';
 import './styles/skin-putty.css';
 import './styles/skin-hifi.css';
 import './store/skin'; // stamps data-skin before the first paint
+import './store/settings'; // and Putty's appearance
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 

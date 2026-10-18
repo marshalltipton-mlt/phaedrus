@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { api } from '../api';
 import { useSonos } from '../store/useSonos';
-import { useSettings, useSettingsPanel, type TapAction } from '../store/settings';
+import { useSettings, useSettingsPanel, type PuttyAppearance, type TapAction } from '../store/settings';
 import { SKINS, useSkin, type Skin } from '../store/skin';
 import { useSpotifyLink } from '../hooks/useSpotifyLink';
 import { agoLabel, plural } from '../lib/format';
@@ -393,7 +393,65 @@ function Appearance() {
           );
         })}
       </div>
+      {skin === 'putty' && <PuttyAppearanceRow />}
     </Section>
+  );
+}
+
+const PUTTY_MODES: { id: PuttyAppearance; label: string }[] = [
+  { id: 'auto', label: 'Auto' },
+  { id: 'light', label: 'Light' },
+  { id: 'night', label: 'Night' },
+];
+
+/** Putty only: follow the system's appearance, or keep it light or Night. */
+function PuttyAppearanceRow() {
+  const mode = useSettings((s) => s.puttyAppearance);
+  const setSettings = useSettings((s) => s.set);
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const onKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    const i = PUTTY_MODES.findIndex((m) => m.id === mode);
+    let j = i;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % PUTTY_MODES.length;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i + PUTTY_MODES.length - 1) % PUTTY_MODES.length;
+    else return;
+    e.preventDefault();
+    e.stopPropagation();
+    setSettings({ puttyAppearance: PUTTY_MODES[j].id });
+    refs.current[j]?.focus();
+  };
+
+  return (
+    <div className="set-row pt-mode-row">
+      <div className="set-row-text">
+        <span className="set-row-title" id="pt-mode-q">
+          Putty appearance
+        </span>
+        <span className="set-row-sub">Auto follows the system's appearance. With macOS set to Auto, that's Night at sunset.</span>
+      </div>
+      <div className="pt-modeseg" role="radiogroup" aria-labelledby="pt-mode-q" onKeyDown={onKey}>
+        {PUTTY_MODES.map((m, i) => {
+          const on = mode === m.id;
+          return (
+            <button
+              key={m.id}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              tabIndex={on ? 0 : -1}
+              className={`pt-modeseg-opt${on ? ' is-on' : ''}`}
+              onClick={() => setSettings({ puttyAppearance: m.id })}
+            >
+              {m.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
