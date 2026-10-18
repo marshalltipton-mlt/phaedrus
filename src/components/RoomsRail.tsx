@@ -4,6 +4,7 @@ import { useSettingsPanel } from '../store/settings';
 import { plural } from '../lib/format';
 import { Gear, Radar } from './Icons';
 import type { Zone } from '../api/types';
+import { useRoomDots } from '../hooks/useRoomDots';
 import '../styles/rooms.css';
 
 export default function RoomsRail() {
@@ -17,6 +18,7 @@ export default function RoomsRail() {
   const everywhere = useSonos((s) => s.everywhere);
   const rediscover = useSonos((s) => s.rediscover);
   const openSettings = useSettingsPanel((s) => s.setOpen);
+  const dotOf = useRoomDots();
 
   // Re-render the "found 4s ago" line without polling anything.
   const [, setNow] = useState(0);
@@ -60,7 +62,7 @@ export default function RoomsRail() {
                   onClick={() => selectGroup(g)}
                   aria-current={selected}
                 >
-                  <span className="room-marker" aria-hidden="true" />
+                  <span className="room-marker" data-dot={dotOf(g.coordinatorUuid)} aria-hidden="true" />
                   <span className="room-text">
                     <span className="room-name">{g.name}</span>
                     {others.length > 0 && (

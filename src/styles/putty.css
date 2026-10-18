@@ -1,0 +1,658 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PUTTY — the now-playing module (PuttyStage), the dot-matrix clock, the
+   speaker grilles, and the phone's mini-player and volume module.
+   The rails, keycaps, progress slot and knob are in skin-putty.css.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.putty {
+  --pt-art: clamp(130px, min(41cqw, calc(100cqh - 214px)), 300px);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+}
+
+/* ── Top line: the room, the queue position, the playing LED ─────────── */
+
+.pt-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.pt-top > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pt-top-room {
+  color: var(--pt-tangerine);
+  flex: 0 1 auto;
+}
+
+.pt-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-left: auto;
+}
+
+.pt-led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pt-stone);
+  box-shadow: 0 0 0 3px rgba(167, 162, 151, 0.25);
+  transition: background var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease);
+}
+
+.putty.is-playing .pt-led {
+  background: var(--pt-sage);
+  box-shadow: 0 0 0 3px rgba(141, 170, 130, 0.25);
+}
+
+/* ── The art, and the type beside it ─────────────────────────────────── */
+
+.pt-head {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  min-width: 0;
+}
+
+.pt-art {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  width: var(--pt-art);
+  height: var(--pt-art);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--pt-fog);
+  box-shadow: var(--pt-art-shadow);
+}
+
+.pt-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pt-art-blank {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 72% 28%, var(--pt-butter), rgba(234, 195, 95, 0) 55%),
+    radial-gradient(circle at 22% 82%, var(--pt-blush), rgba(231, 168, 164, 0) 60%),
+    linear-gradient(140deg, var(--pt-tangerine), #e9a066);
+}
+
+/* Grain on the art: dark grain on a light surface. */
+.pt-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
+  pointer-events: none;
+}
+
+.pt-type {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pt-title {
+  font-family: var(--pt-serif);
+  font-size: clamp(32px, 7cqw, 56px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--pt-ink);
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* Room for descenders: the clamp's overflow clip would cut a g or y. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.pt-title-idle {
+  color: var(--pt-ink-2);
+}
+
+.pt-artist {
+  font-family: var(--pt-mono);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pt-album {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── The track's colour ────────────────────────────────────────────────
+   Registered, so the stage can ease all three at once when a new track
+   brings a new pop (useTrackPop). Only these tokens transition, never the
+   dots: with the clock scrolling, per-dot fades would smear. */
+
+@property --led-on {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f2643e;
+}
+
+@property --led-dim {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #9a4c34;
+}
+
+@property --breath {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e9a07c;
+}
+
+.stage-putty {
+  transition:
+    --led-on 0.9s ease,
+    --led-dim 0.9s ease,
+    --breath 0.9s ease;
+}
+
+/* ── Speaker grille: 5px holes on an 11px pitch, each shaded at the top
+   like a punched hole. While music plays the holes breathe in the track's
+   colour (--breath), each one's phase set by its distance from the centre
+   (PuttyGrille), so a slow ripple spreads outward. ─────────────────────── */
+
+@keyframes ptBreath {
+  0%,
+  100% {
+    background-color: var(--pt-hole-color);
+    transform: scale(1);
+  }
+  50% {
+    background-color: var(--breath);
+    transform: scale(1.3);
+  }
+}
+
+.pt-grille {
+  --pt-hole: 5px;
+  display: grid;
+  gap: 6px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pt-grille i {
+  width: var(--pt-hole);
+  height: var(--pt-hole);
+  border-radius: 50%;
+  background-color: var(--pt-hole-color);
+  box-shadow: var(--pt-hole-sink);
+}
+
+.pt-grille.is-breathing i {
+  animation: ptBreath 3.6s ease-in-out infinite;
+}
+
+/* Paused: frozen mid-breath, which looks calm. */
+.pt-grille.is-held i {
+  animation-play-state: paused;
+}
+
+.pt-grille-type {
+  width: min(100%, 374px);
+  /* A breath swells a hole by 30%: room for it at the edges. */
+  padding: 2px 1px;
+  margin-top: 14px;
+}
+
+/* In the volume deck, where Hi-Fi has its meters. */
+.pt-grille-deck {
+  flex: 0 0 154px;
+  padding: 2px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-grille i,
+  .pt-matrix svg,
+  .pt-dot {
+    animation: none !important;
+  }
+}
+
+/* ── The deck: keycaps and the clock ─────────────────────────────────── */
+
+.pt-deck {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 16px 20px;
+}
+
+.pt-deck .transport {
+  flex: 1 1 380px;
+  width: auto;
+}
+
+.pt-matrix {
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  border-radius: 12px;
+  background: var(--pt-panel);
+  box-shadow: var(--pt-panel-sink);
+}
+
+/* Light grain on the dark panel. */
+.pt-matrix::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: url('./putty/noise-light.svg');
+  opacity: 0.08;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.pt-matrix svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pt-clock {
+  flex: 0 1 300px;
+  min-width: 200px;
+  padding: 14px 18px;
+}
+
+/* Lit dots take the track's colour from the stage; the dots themselves never
+   transition (a scroll would smear), only the colour tokens do. */
+.pt-dot-on {
+  fill: var(--led-on);
+}
+
+.pt-dot-dim {
+  fill: var(--led-dim);
+}
+
+.pt-dot-off {
+  fill: var(--pt-led-off);
+}
+
+/* The last ten seconds: the bright colon ticks with the seconds. */
+@keyframes ptTick {
+  0% {
+    opacity: 0.25;
+  }
+  35%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.pt-dot-tick {
+  animation: ptTick 1s ease-out infinite;
+  animation-delay: var(--pt-tick-phase, 0s);
+}
+
+/* Paused: the whole display rests, slowly dimming and brightening. */
+@keyframes ptDim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pt-matrix svg.is-resting {
+  animation: ptDim 2.6s ease-in-out infinite;
+}
+
+/* Out of sight, nothing runs. */
+.putty.is-hidden .pt-matrix svg,
+.putty.is-hidden .pt-dot {
+  animation-play-state: paused;
+}
+
+/* Not room for both on one line: the clock gets a row of its own. */
+@container putty-stage (max-width: 660px) {
+  .pt-clock {
+    flex: 1 1 100%;
+  }
+}
+
+/* The phone's knob-and-clock row; desktop has the volume deck instead. */
+.pt-pocket {
+  display: none;
+}
+
+/* ── A narrow stage: the type under the art ──────────────────────────── */
+
+@container putty-stage (max-width: 540px) {
+  .putty {
+    --pt-art: clamp(110px, min(64cqw, calc(100cqh - 372px)), 240px);
+    gap: 20px;
+  }
+
+  .pt-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .pt-art {
+    align-self: center;
+  }
+
+  .pt-title {
+    font-size: clamp(28px, 9cqw, 40px);
+  }
+
+  .pt-artist {
+    font-size: 14px;
+  }
+
+  .pt-grille-type {
+    display: none;
+  }
+
+  .pt-clock {
+    flex: 1 1 100%;
+  }
+}
+
+/* Narrow and short: the keycaps keep their row, the clock steps out. */
+@container putty-stage (max-width: 540px) and (max-height: 500px) {
+  .putty {
+    --pt-art: clamp(100px, min(64cqw, calc(100cqh - 296px)), 240px);
+  }
+
+  .pt-deck > .pt-clock {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PHONE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* The art gives way on a short phone so the knob row stays above the tabs. */
+html[data-shell='phone'] .putty {
+  --pt-art: clamp(140px, min(68cqw, calc(100svh - 510px)), 250px);
+  gap: 14px;
+}
+
+html[data-shell='phone'] .pt-top {
+  font-size: 10px;
+}
+
+html[data-shell='phone'] .pt-top-room {
+  display: none;
+}
+
+html[data-shell='phone'] .pt-state {
+  gap: 6px;
+}
+
+html[data-shell='phone'] .pt-led {
+  width: 8px;
+  height: 8px;
+  box-shadow: none;
+}
+
+html[data-shell='phone'] .pt-head {
+  gap: 18px;
+}
+
+html[data-shell='phone'] .pt-art {
+  box-shadow: var(--pt-art-shadow);
+}
+
+html[data-shell='phone'] .pt-type {
+  gap: 4px;
+}
+
+html[data-shell='phone'] .pt-title {
+  font-size: 32px;
+  line-height: 1.08;
+}
+
+html[data-shell='phone'] .pt-artist {
+  font-size: 13px;
+}
+
+html[data-shell='phone'] .pt-album {
+  font-size: 10px;
+}
+
+html[data-shell='phone'] .pt-deck > .pt-clock {
+  display: none;
+}
+
+/* A small plain knob, the level, and the elapsed time on a little clock. */
+html[data-shell='phone'] .pt-pocket {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+html[data-shell='phone'] .pt-pocket .knob-block {
+  gap: 0;
+  padding: 0;
+}
+
+html[data-shell='phone'] .pt-pocket .knob-caption,
+html[data-shell='phone'] .pt-pocket .knob-scale,
+html[data-shell='phone'] .pt-pocket .knob-value {
+  display: none;
+}
+
+html[data-shell='phone'] .pt-pocket .knob {
+  width: 56px;
+  height: 56px;
+}
+
+html[data-shell='phone'] .pt-pocket .knob-body {
+  inset: 0;
+  box-shadow:
+    0 10px 18px -8px rgba(150, 70, 30, 0.55),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.25);
+}
+
+html[data-shell='phone'] .pt-pocket .knob-pointer {
+  top: 6px;
+  width: 3px;
+  height: 14px;
+  margin-left: -1.5px;
+}
+
+.pt-pocket-vol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pt-pocket-vol .label {
+  font-size: 10px;
+}
+
+.pt-pocket-vol .pt-pocket-level {
+  font-size: 11px;
+  color: var(--pt-ink);
+}
+
+.pt-clock-sm {
+  flex: none;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  box-shadow: var(--pt-panel-sink);
+}
+
+/* ── Phone queue page: the mini-player above the list ────────────────── */
+
+.pt-mini {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--pt-module);
+  box-shadow: var(--pt-module-lift);
+}
+
+.pt-mini::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
+  pointer-events: none;
+}
+
+.pt-mini-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  color: var(--pt-ink);
+}
+
+.pt-mini .pt-art {
+  width: 52px;
+  height: 52px;
+  border-radius: 7px;
+  box-shadow: 0 6px 12px -6px rgba(120, 60, 30, 0.55);
+}
+
+.pt-mini-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pt-mini-title {
+  font-family: var(--pt-sans);
+  font-size: 17px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pt-mini-artist {
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pt-mini-slot {
+  position: relative;
+  height: 4px;
+  margin-top: 5px;
+  border-radius: 2px;
+  background: var(--pt-slot);
+  overflow: hidden;
+}
+
+.pt-mini-slot i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 2px;
+  background: var(--pt-tangerine);
+}
+
+.pt-mini-key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 48px;
+  border-radius: 8px;
+  color: var(--pt-ink);
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+.pt-mini-key:active {
+  transform: translateY(2px);
+  box-shadow: var(--pt-play-down);
+}
+
+/* ── Phone rooms page: the volume module under the room list ─────────── */
+
+.pt-volume {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  margin-top: 12px;
+  background: var(--pt-rail);
+  box-shadow: var(--pt-module-lift);
+}
+
+.pt-volume::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
+  pointer-events: none;
+}

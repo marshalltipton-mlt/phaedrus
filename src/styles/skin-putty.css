@@ -1,0 +1,2047 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PUTTY SKIN — soft hardware. Design: Zoe (docs/skins/putty.md).
+
+   Warm putty greys, chunky keycaps, a tangerine volume knob, a red-orange
+   dot-matrix clock, speaker-grille dots and fine grain on every surface.
+   Light mode only. Every panel is a module sitting on a putty desk; one
+   accent (tangerine) for "you are here", and every room carries its own
+   small colour dot.
+
+   The tokens are re-pointed first, so anything that only speaks in tokens
+   restyles for free; the rest is the work tokens can't do. Phone rules
+   live here too, at the bottom, scoped to [data-shell='phone'].
+   Everything is keyed off [data-skin='putty'] on <html>.
+
+   Fonts (OFL, licences in src/assets/fonts/LICENSES.md):
+     IBM Plex Serif 300 italic   the track playing now
+     DM Sans 500                 things you pick: rooms, tracks, sleeves
+     IBM Plex Mono 400/500       everything else: labels, numbers, artists
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-serif/latin-300-italic.css';
+@import '@fontsource/ibm-plex-serif/latin-400.css';
+@import '@fontsource/dm-sans/latin-500.css';
+
+[data-skin='putty'] {
+  color-scheme: light;
+
+  /* ── Putty's own palette ──────────────────────────────────────────────── */
+  --pt-paper: #eeebe4;
+  --pt-shell: #e3dfd6;
+  --pt-fog: #d0cbc1;
+  --pt-stone: #a7a297;
+  --pt-graphite: #3b3a36;
+  --pt-ink: #2a2924;
+  --pt-ink-2: #67635b;
+  --pt-tangerine: #e8794f;
+  --pt-sage: #8daa82;
+  --pt-butter: #eac35f;
+  --pt-blush: #e7a8a4;
+  --pt-mist: #90b2c1;
+  --pt-led: #f2643e;
+  --pt-led-dim: #9a4c34;
+  --pt-led-off: rgba(255, 255, 255, 0.07);
+  --pt-hole-color: #aba59b;
+  --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.35);
+
+  /* The track's colour: clock LEDs and the grille's breath (see putty.css). */
+  --led-on: #f2643e;
+  --led-dim: #9a4c34;
+  --breath: #e9a07c;
+
+  --pt-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --pt-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  /* The physical vocabulary, named once. */
+  --pt-module: linear-gradient(165deg, #efebe4, #e3dfd6 60%, #d9d4ca);
+  --pt-module-lift: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 10px 24px -12px rgba(60, 50, 35, 0.35),
+    0 2px 4px rgba(60, 50, 35, 0.1);
+  --pt-key: linear-gradient(180deg, #f6f3ee, #e5e1d9);
+  --pt-key-up: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac, 0 6px 10px -4px rgba(60, 50, 35, 0.35);
+  --pt-key-down: inset 0 1px 0 #fff, 0 1px 0 #bdb7ac, 0 2px 4px -2px rgba(60, 50, 35, 0.35);
+  --pt-raised: linear-gradient(180deg, #f6f3ee, #e8e4dc);
+  --pt-raised-lift: inset 0 1px 0 #fff, 0 3px 0 #c6c0b5, 0 8px 14px -8px rgba(60, 50, 35, 0.35);
+  --pt-tray: #cfcac0;
+  --pt-tray-sink: inset 0 2px 4px rgba(60, 50, 35, 0.25);
+  --pt-art-shadow: 0 24px 44px -18px rgba(120, 60, 30, 0.55), 0 4px 8px rgba(60, 50, 35, 0.15);
+  --pt-rail: linear-gradient(170deg, #ece8e0, #e3dfd6 55%, #dad5cb);
+  --pt-key-up-2: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac;
+  --pt-key-up-3: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac;
+  --pt-key-down-1: inset 0 1px 0 #fff, 0 1px 0 #bdb7ac;
+  --pt-key-soft: inset 0 1px 0 #fff, 0 3px 0 #bdb7ac, 0 6px 10px -4px rgba(60, 50, 35, 0.3);
+  --pt-key-tool: inset 0 1px 0 #fff, 0 2px 0 #bdb7ac, 0 4px 8px -4px rgba(60, 50, 35, 0.4);
+  --pt-chip-up: inset 0 1px 0 #fff, 0 3px 0 #c6c0b5;
+  --pt-chip-down: inset 0 1px 0 #fff, 0 1px 0 #c6c0b5;
+  --pt-smallkey: #d6d1c7;
+  --pt-smallkey-up: 0 2px 0 #bdb7ac;
+  --pt-smallkey-down: 0 1px 0 #bdb7ac;
+  --pt-play: linear-gradient(180deg, #c9c4ba, #b7b1a6);
+  --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #9c968b, 0 6px 10px -4px rgba(60, 50, 35, 0.35);
+  --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 0 #9c968b, 0 2px 4px -2px rgba(60, 50, 35, 0.35);
+  --pt-slot: #c3bdb2;
+  --pt-fader-slot: #b9b3a8;
+  --pt-slot-sink: inset 0 1px 2px rgba(40, 30, 20, 0.3);
+  --pt-cap: linear-gradient(180deg, #faf8f4, #e2ddd4);
+  --pt-cap-lift: 0 4px 8px -2px rgba(60, 50, 35, 0.4), inset 0 1px 0 #fff;
+  --pt-cap-lift-hover: 0 6px 10px -2px rgba(60, 50, 35, 0.45), inset 0 1px 0 #fff;
+  --pt-thumb: #faf8f4;
+  --pt-thumb-lift: 0 2px 5px rgba(60, 50, 35, 0.4);
+  --pt-tick: var(--pt-stone);
+  --pt-tick-major: #6f6a62;
+  --pt-panel: radial-gradient(circle at 30% 20%, #4a4943, #3b3a36 70%);
+  --pt-panel-sink: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.6);
+  --pt-sleeve-shadow: 0 10px 18px -10px rgba(60, 50, 35, 0.5), 0 2px 4px rgba(60, 50, 35, 0.12);
+  --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(60, 50, 35, 0.55), 0 2px 4px rgba(60, 50, 35, 0.14);
+  --pt-thumbnail-shadow: 0 3px 6px -2px rgba(60, 50, 35, 0.35);
+  --pt-dot-sink: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  --pt-hover: rgba(255, 255, 255, 0.28);
+  --pt-ink-wash: rgba(42, 41, 36, 0.06);
+  --pt-ink-off: rgba(42, 41, 36, 0.28);
+  --pt-scrim: rgba(238, 235, 228, 0.97);
+  --pt-scroll-thumb: rgba(42, 41, 36, 0.18);
+
+  /* Grain: dark specks multiplied into a light surface. Night swaps in light
+     specks, screened, a little stronger. */
+  --pt-grain: url('./putty/noise-dark.svg');
+  --pt-grain-opacity: 0.11;
+  --pt-grain-blend: multiply;
+
+  /* ── Hi-Fi tokens, re-pointed ─────────────────────────────────────────── */
+  --bg-deep: #eeebe4;
+  --bg: #eeebe4;
+  --bg-raised: #e3dfd6;
+  --walnut: #d0cbc1;
+  --walnut-light: #e3dfd6;
+
+  /* "Cream" becomes ink: the meaning inverts, the presence scale stays. */
+  --cream: #2a2924;
+  --cream-dim: #67635b;
+  --cream-faint: #8a857c;
+  --cream-ghost: rgba(42, 41, 36, 0.12);
+
+  /* The lamp becomes tangerine. */
+  --amber: #e8794f;
+  --amber-hot: #f39a73;
+  --amber-glow: rgba(232, 121, 79, 0.22);
+
+  --rust: #c4553a;
+  --burgundy: #e7a8a4;
+  --wine: #3b3a36;
+  --olive: #8daa82;
+  --mustard: #eac35f;
+
+  /* The serif belongs to one line only, the track playing now (.pt-title,
+     which names it directly). Every other "display" title, in search,
+     settings and the curtains, is a thing you pick: DM Sans. */
+  --pt-serif: 'IBM Plex Serif', Georgia, serif;
+  --display: var(--pt-sans);
+  --face: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  --radius: 10px;
+  --lift: 0 10px 24px -12px rgba(60, 50, 35, 0.35), 0 2px 4px rgba(60, 50, 35, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --sink: inset 0 2px 4px rgba(60, 50, 35, 0.25);
+}
+
+[data-skin='putty'] body {
+  background: var(--pt-paper);
+  color: var(--pt-ink);
+  font-synthesis: none;
+}
+
+/* Plex and DM Sans have none of Fraunces's axes. */
+[data-skin='putty'] .room-name,
+[data-skin='putty'] .arrange-name,
+[data-skin='putty'] .qrow-title,
+[data-skin='putty'] .crate-caption,
+[data-skin='putty'] .crate-bill-title,
+[data-skin='putty'] .sresult-title,
+[data-skin='putty'] .search-input,
+[data-skin='putty'] .search-drill-title,
+[data-skin='putty'] .curtain-title,
+[data-skin='putty'] .boundary-title,
+[data-skin='putty'] .panel-empty-line,
+[data-skin='putty'] .search-prompt,
+[data-skin='putty'] .linkcard-title,
+[data-skin='putty'] .settings-title,
+[data-skin='putty'] .set-heading {
+  font-variation-settings: normal;
+  text-shadow: none;
+}
+
+/* No lamp, no drifting light leak, no moving film grain: Putty's grain is
+   printed into each surface and holds still. */
+[data-skin='putty'] .atmo-leak,
+[data-skin='putty'] .atmo-vignette,
+[data-skin='putty'] .atmo-grain {
+  display: none;
+}
+
+/* ── Grain: dark grain on light surfaces, light grain on dark ones ─────── */
+
+[data-skin='putty'] .shell,
+[data-skin='putty'] .phone,
+[data-skin='putty'] .rooms,
+[data-skin='putty'] .right-rail,
+[data-skin='putty'] .stage-scroll,
+[data-skin='putty'] .faceplate,
+[data-skin='putty'] .qrow-art,
+[data-skin='putty'] .crate-face {
+  isolation: isolate;
+}
+
+[data-skin='putty'] .shell::after,
+[data-skin='putty'] .phone::after,
+[data-skin='putty'] .rooms::after,
+[data-skin='putty'] .right-rail::after,
+[data-skin='putty'] .stage-scroll::after,
+[data-skin='putty'] .faceplate::after,
+[data-skin='putty'] .qrow-art::after,
+[data-skin='putty'] .crate-wear {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: var(--pt-grain);
+  opacity: var(--pt-grain-opacity);
+  mix-blend-mode: var(--pt-grain-blend);
+  pointer-events: none;
+}
+
+[data-skin='putty'] .shell,
+[data-skin='putty'] .stage-scroll {
+  position: relative;
+}
+
+/* ── The desk and its modules ──────────────────────────────────────────── */
+
+[data-skin='putty'] .shell {
+  gap: 16px;
+  padding: 16px;
+  background: var(--pt-paper);
+}
+
+[data-skin='putty'] .rooms,
+[data-skin='putty'] .right-rail,
+[data-skin='putty'] .stage-scroll,
+[data-skin='putty'] .faceplate {
+  border-radius: 14px;
+  background: var(--pt-module);
+  box-shadow: var(--pt-module-lift);
+  border: 0;
+}
+
+[data-skin='putty'] .rooms,
+[data-skin='putty'] .right-rail {
+  background: var(--pt-rail);
+  z-index: auto;
+}
+
+/* The traffic lights sit over the rooms module's top edge. */
+[data-skin='putty'] .rooms-drag,
+[data-skin='putty'] .right-drag {
+  height: 26px;
+}
+
+/* ── Labels: Plex Mono, small caps-height, tracked ─────────────────────── */
+
+[data-skin='putty'] .label {
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .num {
+  font-family: var(--pt-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Rooms rail ────────────────────────────────────────────────────────── */
+
+[data-skin='putty'] .rooms-head {
+  align-items: center;
+  padding: 0 22px 12px;
+}
+
+[data-skin='putty'] .rooms-head .label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+/* A small key. */
+[data-skin='putty'] .rooms-arrange,
+[data-skin='putty'] .panel-action {
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--pt-smallkey);
+  box-shadow: var(--pt-smallkey-up);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease), color var(--t) var(--ease);
+}
+
+[data-skin='putty'] .rooms-arrange:hover,
+[data-skin='putty'] .panel-action:hover {
+  color: var(--pt-ink);
+  background: var(--pt-smallkey);
+}
+
+[data-skin='putty'] .rooms-arrange:active,
+[data-skin='putty'] .panel-action:active {
+  transform: translateY(1px);
+  box-shadow: var(--pt-smallkey-down);
+}
+
+[data-skin='putty'] .rooms-arrange.is-on {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-2);
+}
+
+[data-skin='putty'] .panel-action.is-armed {
+  color: #fff;
+  background: var(--pt-tangerine);
+  box-shadow: 0 2px 0 #c4603b;
+}
+
+[data-skin='putty'] .rooms-list {
+  padding: 0 14px 6px;
+}
+
+[data-skin='putty'] .rooms-list li + li {
+  margin-top: 6px;
+}
+
+[data-skin='putty'] .room {
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+[data-skin='putty'] .room:hover {
+  background: var(--pt-hover);
+}
+
+[data-skin='putty'] .room.is-selected {
+  background: var(--pt-raised);
+  box-shadow: var(--pt-raised-lift);
+}
+
+/* Every room carries its own colour (data-dot, from a hash of its uuid). */
+[data-skin='putty'] [data-dot='sage'] {
+  --room-dot: var(--pt-sage);
+}
+[data-skin='putty'] [data-dot='butter'] {
+  --room-dot: var(--pt-butter);
+}
+[data-skin='putty'] [data-dot='blush'] {
+  --room-dot: var(--pt-blush);
+}
+[data-skin='putty'] [data-dot='mist'] {
+  --room-dot: var(--pt-mist);
+}
+
+/* The rail's lit bar becomes the room's own colour dot. */
+[data-skin='putty'] .room-marker,
+[data-skin='putty'] .room.is-selected .room-marker {
+  position: static;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--room-dot, var(--pt-stone));
+  box-shadow: var(--pt-dot-sink);
+}
+
+
+[data-skin='putty'] .room-text {
+  gap: 3px;
+}
+
+[data-skin='putty'] .room-name,
+[data-skin='putty'] .room:hover .room-name,
+[data-skin='putty'] .room.is-selected .room-name {
+  font-family: var(--pt-sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .room-with {
+  font-family: var(--pt-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+}
+
+/* The selected room's tangerine LED, on the right. */
+[data-skin='putty'] .room.is-selected::after {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pt-tangerine);
+  box-shadow: 0 0 0 3px rgba(232, 121, 79, 0.22);
+}
+
+[data-skin='putty'] .room .bars {
+  display: none;
+}
+
+/* "Everywhere": a full-width keycap. */
+[data-skin='putty'] .rooms-everywhere {
+  justify-content: center;
+  height: 44px;
+  margin: 8px 18px 0;
+  padding: 0;
+  border-radius: 10px;
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-soft);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+[data-skin='putty'] .rooms-everywhere .label,
+[data-skin='putty'] .rooms-everywhere:hover:not(:disabled) .label {
+  color: var(--pt-ink);
+  letter-spacing: 0.08em;
+}
+
+[data-skin='putty'] .rooms-everywhere:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: var(--pt-key-down);
+}
+
+[data-skin='putty'] .rooms-everywhere-rule {
+  display: none;
+}
+
+[data-skin='putty'] .rooms-foot {
+  border-top: 0;
+  padding: 14px 22px 16px;
+}
+
+[data-skin='putty'] .rooms-status,
+[data-skin='putty'] .rooms-rescan {
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .rooms-rescan:hover:not(:disabled) {
+  color: var(--pt-tangerine);
+}
+
+/* Arrange mode: the room switches. */
+[data-skin='putty'] .arrange-hint {
+  font-family: var(--pt-mono);
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .arrange-hint em {
+  color: var(--pt-tangerine);
+}
+
+[data-skin='putty'] .arrange-name {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .switch {
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+[data-skin='putty'] .switch.is-on {
+  background: var(--pt-tangerine);
+  box-shadow: inset 0 2px 4px rgba(120, 50, 20, 0.3);
+}
+
+[data-skin='putty'] .switch-thumb {
+  background: var(--pt-cap);
+  box-shadow: 0 2px 4px rgba(60, 50, 35, 0.4), inset 0 1px 0 #fff;
+}
+
+/* ── Right rail: a two-key switch in a tray, and a search key ──────────── */
+
+[data-skin='putty'] .right-tabs {
+  gap: 10px;
+  padding: 0 14px 12px;
+}
+
+[data-skin='putty'] .right-tabs-set {
+  flex: 1;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+[data-skin='putty'] .right-tab {
+  flex: 1;
+  height: 36px;
+  padding: 0;
+  border-radius: 7px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+  transition: color var(--t) var(--ease), background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+[data-skin='putty'] .right-tab:hover {
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .right-tab.is-active {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-2);
+}
+
+[data-skin='putty'] .right-tab.is-active::after {
+  display: none;
+}
+
+[data-skin='putty'] .right-search {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-3);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+[data-skin='putty'] .right-search:hover {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+}
+
+[data-skin='putty'] .right-search:active {
+  transform: translateY(2px);
+  box-shadow: var(--pt-key-down-1);
+}
+
+/* ── Queue ─────────────────────────────────────────────────────────────── */
+
+[data-skin='putty'] .panel-head {
+  align-items: center;
+  padding: 4px 22px 8px;
+}
+
+[data-skin='putty'] .panel-count {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .panel-empty-line {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .panel-empty-sub {
+  font-family: var(--pt-mono);
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .queue {
+  counter-reset: pt-q;
+  padding: 0 14px 14px;
+}
+
+[data-skin='putty'] .queue > li {
+  counter-increment: pt-q;
+}
+
+[data-skin='putty'] .queue > li + li {
+  margin-top: 2px;
+}
+
+[data-skin='putty'] .qrow {
+  border-radius: 9px;
+  transition: background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+[data-skin='putty'] .qrow:hover {
+  background: var(--pt-hover);
+}
+
+[data-skin='putty'] .qrow.is-current {
+  background: var(--pt-raised);
+  box-shadow: var(--pt-raised-lift);
+}
+
+[data-skin='putty'] .qrow-main {
+  gap: 12px;
+  padding: 7px 8px;
+}
+
+/* The lit bar becomes the track's number. */
+[data-skin='putty'] .qrow-marker,
+[data-skin='putty'] .qrow.is-current .qrow-marker {
+  position: static;
+  flex: none;
+  width: 20px;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .qrow-marker::before {
+  content: counter(pt-q, decimal-leading-zero);
+}
+
+[data-skin='putty'] .qrow.is-current .qrow-marker {
+  color: var(--pt-tangerine);
+}
+
+[data-skin='putty'] .qrow-art {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--pt-fog);
+  box-shadow: var(--pt-thumbnail-shadow);
+}
+
+[data-skin='putty'] .qrow-art img,
+[data-skin='putty'] .crate-face img {
+  filter: none;
+}
+
+[data-skin='putty'] .qrow-art-blank {
+  background: linear-gradient(140deg, var(--pt-mist), var(--pt-blush));
+}
+
+[data-skin='putty'] .qrow-art-glow {
+  display: none;
+}
+
+[data-skin='putty'] .qrow-text {
+  gap: 2px;
+}
+
+[data-skin='putty'] .qrow-title {
+  font-family: var(--pt-sans);
+  font-size: 15px;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .qrow-artist {
+  font-family: var(--pt-mono);
+  font-size: 10.5px;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .qrow-time,
+[data-skin='putty'] .qrow.is-current .qrow-time {
+  font-family: var(--pt-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .qrow-remove {
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .qrow-remove:hover {
+  color: var(--pt-tangerine);
+  background: rgba(232, 121, 79, 0.12);
+}
+
+/* ── Crate: a two-column grid of sleeves ───────────────────────────────── */
+
+[data-skin='putty'] .crate {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 12px;
+  padding: 2px 16px 18px;
+}
+
+[data-skin='putty'] .crate-item {
+  gap: 7px;
+}
+
+[data-skin='putty'] .crate-face {
+  border-radius: 8px;
+  background: var(--pt-fog);
+  box-shadow: var(--pt-sleeve-shadow);
+}
+
+[data-skin='putty'] .crate-item:hover .crate-face:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--pt-sleeve-shadow-hover);
+}
+
+[data-skin='putty'] .crate-item:hover .crate-face img {
+  filter: none;
+}
+
+/* Sleeves with no art: a soft two-pop gradient, the title in ink. */
+[data-skin='putty'] .crate-bill {
+  border-radius: inherit;
+}
+
+[data-skin='putty'] .ground-walnut {
+  background: linear-gradient(140deg, var(--pt-tangerine), var(--pt-butter));
+}
+[data-skin='putty'] .ground-burgundy {
+  background: linear-gradient(140deg, var(--pt-mist), var(--pt-blush));
+}
+[data-skin='putty'] .ground-olive {
+  background: linear-gradient(140deg, var(--pt-sage), var(--pt-butter));
+}
+[data-skin='putty'] .ground-mustard {
+  background: linear-gradient(140deg, var(--pt-blush), var(--pt-tangerine));
+}
+[data-skin='putty'] .ground-wine {
+  background: var(--pt-panel);
+}
+
+/* The title shows once, under the sleeve, never on it as well. */
+[data-skin='putty'] .crate-bill-title {
+  display: none;
+}
+
+[data-skin='putty'] .crate-bill {
+  justify-content: flex-end;
+}
+
+[data-skin='putty'] .crate-bill-title,
+[data-skin='putty'] .ground-mustard .crate-bill-title {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .crate-bill-mark,
+[data-skin='putty'] .ground-mustard .crate-bill-mark {
+  color: rgba(42, 41, 36, 0.7);
+}
+
+[data-skin='putty'] .ground-wine .crate-bill-title {
+  font-family: var(--pt-mono);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-led);
+}
+
+[data-skin='putty'] .ground-wine .crate-bill-mark {
+  color: rgba(242, 100, 62, 0.6);
+}
+
+[data-skin='putty'] .ground-wine ~ .crate-wear {
+  background-image: url('./putty/noise-light.svg');
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+[data-skin='putty'] .crate-caption {
+  font-family: var(--pt-sans);
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.2;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .crate-caption-sub {
+  margin-top: -3px;
+  font-family: var(--pt-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .crate-tool,
+[data-skin='putty'] .sresult-tool {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-tool);
+}
+
+[data-skin='putty'] .crate-tool:hover,
+[data-skin='putty'] .sresult-tool:hover {
+  color: var(--pt-tangerine);
+}
+
+/* ── Stage: the now-playing module (PuttyStage, in putty.css) over the
+   volume deck ─────────────────────────────────────────────────────────── */
+
+[data-skin='putty'] .stage {
+  gap: 16px;
+  background: transparent;
+}
+
+[data-skin='putty'] .stage > .stage-scroll {
+  container: putty-stage / size;
+  padding: 26px 32px 28px;
+}
+
+[data-skin='putty'] .stage-putty .stage-body {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: auto 0;
+}
+
+/* ── Progress: a slot, a tangerine fill, a pale round thumb ────────────── */
+
+[data-skin='putty'] .progress:not(.progress-live) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'track track' 'now total';
+  row-gap: 4px;
+}
+
+[data-skin='putty'] .progress-track {
+  grid-area: track;
+  height: 22px;
+}
+
+[data-skin='putty'] .progress-time {
+  grid-area: now;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .progress-total {
+  grid-area: total;
+  justify-self: end;
+}
+
+[data-skin='putty'] .progress-groove {
+  inset: 8px 0;
+  border-radius: 3px;
+  background: var(--pt-slot);
+  box-shadow: var(--pt-slot-sink);
+}
+
+[data-skin='putty'] .progress-played {
+  top: 8px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--pt-tangerine);
+  box-shadow: none;
+}
+
+[data-skin='putty'] .progress-cap,
+[data-skin='putty'] .progress-track:hover .progress-cap,
+[data-skin='putty'] .progress-track.is-scrubbing .progress-cap {
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: var(--pt-thumb);
+  box-shadow: var(--pt-thumb-lift);
+}
+
+[data-skin='putty'] .progress-live .label {
+  color: var(--pt-tangerine);
+}
+
+[data-skin='putty'] .live-pip {
+  background: var(--pt-led);
+  box-shadow: 0 0 0 3px rgba(242, 100, 62, 0.22);
+}
+
+[data-skin='putty'] .progress-live-rule {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--pt-slot);
+  box-shadow: var(--pt-slot-sink);
+}
+
+/* ── Transport: a row of keycaps in a tray ─────────────────────────────── */
+
+[data-skin='putty'] .transport {
+  gap: 8px;
+  padding: 7px;
+  border-radius: 12px;
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+[data-skin='putty'] .transport-main,
+[data-skin='putty'] .transport-mods {
+  display: contents;
+}
+
+[data-skin='putty'] .tactile,
+[data-skin='putty'] .mod {
+  flex: 1;
+  width: auto;
+  height: 58px;
+  border-radius: 8px;
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease), color var(--t) var(--ease);
+}
+
+[data-skin='putty'] .tactile-sm,
+[data-skin='putty'] .tactile-lg {
+  width: auto;
+  height: 58px;
+}
+
+/* Play/pause: the wide, darker key. */
+[data-skin='putty'] .tactile-lg,
+[data-skin='putty'] .tactile-lg.is-playing {
+  flex: 2;
+  color: var(--pt-ink);
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
+}
+
+[data-skin='putty'] .tactile:hover:not(:disabled),
+[data-skin='putty'] .mod:hover:not(:disabled) {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up);
+}
+
+[data-skin='putty'] .tactile-lg:hover:not(:disabled) {
+  background: var(--pt-play);
+  box-shadow: var(--pt-play-up);
+}
+
+/* A keycap nudges down 2px when pressed. */
+[data-skin='putty'] .tactile:active:not(:disabled),
+[data-skin='putty'] .mod:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: var(--pt-key-down);
+}
+
+[data-skin='putty'] .tactile-lg:active:not(:disabled) {
+  box-shadow: var(--pt-play-down);
+}
+
+[data-skin='putty'] .tactile:disabled,
+[data-skin='putty'] .mod:disabled {
+  color: var(--pt-ink-off);
+  box-shadow: var(--pt-key-up);
+}
+
+/* A mode that's on: the icon goes tangerine and a small LED lights. */
+[data-skin='putty'] .mod.is-on {
+  color: var(--pt-ink);
+  text-shadow: none;
+}
+
+[data-skin='putty'] .mod.is-on::after {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  margin: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--pt-tangerine);
+  box-shadow: 0 0 0 2.5px rgba(232, 121, 79, 0.22);
+}
+
+/* ── Volume deck: the knob, the room faders ────────────────────────────── */
+
+[data-skin='putty'] .faceplate {
+  gap: 32px;
+  padding: 18px 32px;
+}
+
+[data-skin='putty'] .faceplate::before,
+[data-skin='putty'] .faceplate-brand {
+  display: none;
+}
+
+[data-skin='putty'] .knob-caption {
+  display: none;
+}
+
+[data-skin='putty'] .knob-block {
+  padding-bottom: 6px;
+}
+
+[data-skin='putty'] .knob {
+  width: 170px;
+  height: 170px;
+}
+
+/* Eleven ticks over the sweep, not twenty-one; every fifth one darker. */
+[data-skin='putty'] .knob-tick:nth-child(even) {
+  display: none;
+}
+
+[data-skin='putty'] .knob-tick,
+[data-skin='putty'] .knob-tick.is-lit,
+[data-skin='putty'] .knob-tick.is-major,
+[data-skin='putty'] .knob-tick.is-major.is-lit {
+  stroke: var(--pt-tick);
+  stroke-width: 1.4;
+}
+
+[data-skin='putty'] .knob-tick:nth-child(10n + 1),
+[data-skin='putty'] .knob-tick.is-lit:nth-child(10n + 1) {
+  stroke: var(--pt-tick-major);
+  stroke-width: 1.8;
+}
+
+[data-skin='putty'] .knob-body {
+  inset: 32px;
+  background: radial-gradient(circle at 35% 28%, #f39a73, #e8794f 55%, #d9653c);
+  box-shadow:
+    0 14px 26px -10px rgba(150, 70, 30, 0.55),
+    0 3px 6px rgba(120, 60, 30, 0.25),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.25);
+}
+
+[data-skin='putty'] .knob:hover .knob-body,
+[data-skin='putty'] .knob.is-dragging .knob-body {
+  box-shadow:
+    0 16px 28px -10px rgba(150, 70, 30, 0.6),
+    0 3px 6px rgba(120, 60, 30, 0.25),
+    inset 0 2px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.25);
+}
+
+[data-skin='putty'] .knob-body::before {
+  display: none;
+}
+
+[data-skin='putty'] .knob-pointer {
+  top: 10px;
+  width: 4px;
+  height: 26px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #fbeadf;
+  box-shadow: none;
+}
+
+/* The number moves off the cap, under the dial: VOL 22. */
+[data-skin='putty'] .knob-value {
+  position: absolute;
+  left: -32px;
+  right: -32px;
+  top: calc(100% + 26px);
+  text-align: center;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+  text-shadow: none;
+}
+
+[data-skin='putty'] .knob-value::before {
+  content: 'VOL ';
+}
+
+[data-skin='putty'] .faders {
+  flex: 1 1 300px;
+  max-width: none;
+  gap: 4px;
+}
+
+[data-skin='putty'] .faders-caption {
+  margin-bottom: 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .faders-caption::after {
+  content: ' in group';
+}
+
+[data-skin='putty'] .fader {
+  gap: 12px;
+  min-height: 40px;
+}
+
+[data-skin='putty'] .fader-mute {
+  width: 22px;
+  height: 22px;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .fader-mute:hover {
+  color: var(--pt-ink);
+  background: var(--pt-ink-wash);
+}
+
+[data-skin='putty'] .fader.is-muted .fader-mute {
+  color: var(--pt-tangerine);
+}
+
+[data-skin='putty'] .fader-name {
+  position: relative;
+  padding-left: 22px;
+  width: clamp(92px, 15cqw, 150px);
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink);
+}
+
+/* Each room's colour dot, in front of its name. */
+[data-skin='putty'] .fader-name::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--room-dot, var(--pt-stone));
+  box-shadow: var(--pt-dot-sink);
+}
+
+
+[data-skin='putty'] .fader-value {
+  width: 30px;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink-2);
+}
+
+[data-skin='putty'] .fader.is-muted .fader-name,
+[data-skin='putty'] .fader.is-muted .fader-value {
+  color: var(--pt-stone);
+}
+
+[data-skin='putty'] .fader-rail {
+  height: 32px;
+}
+
+[data-skin='putty'] .fader-slot {
+  inset: 13px 0;
+  border-radius: 3px;
+  background: var(--pt-fader-slot);
+  box-shadow: var(--pt-slot-sink);
+}
+
+[data-skin='putty'] .fader-fill {
+  display: none;
+}
+
+[data-skin='putty'] .fader-cap {
+  width: 20px;
+  height: 28px;
+  margin-left: -10px;
+  border-radius: 5px;
+  background: var(--pt-cap);
+  box-shadow: var(--pt-cap-lift);
+}
+
+[data-skin='putty'] .fader-cap::after {
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--pt-ink);
+}
+
+[data-skin='putty'] .fader-rail:hover .fader-cap,
+[data-skin='putty'] .fader-rail.is-dragging .fader-cap {
+  box-shadow: var(--pt-cap-lift-hover);
+}
+
+[data-skin='putty'] .fader.is-muted .fader-cap {
+  opacity: 0.55;
+}
+
+/* A narrow stage: a smaller dial, the faders take the room the grille had. */
+@container (max-width: 700px) {
+  [data-skin='putty'] .faceplate {
+    gap: 22px;
+    padding: 14px 22px;
+  }
+
+  [data-skin='putty'] .faceplate .pt-grille-deck {
+    display: none;
+  }
+
+  [data-skin='putty'] .faceplate .knob {
+    width: 128px;
+    height: 128px;
+  }
+
+  [data-skin='putty'] .faceplate .knob-body {
+    inset: 24px;
+  }
+
+  [data-skin='putty'] .faceplate .knob-pointer {
+    top: 8px;
+    height: 20px;
+  }
+
+  [data-skin='putty'] .faceplate .knob-value {
+    top: calc(100% + 18px);
+  }
+
+  [data-skin='putty'] .faceplate .fader-name {
+    width: clamp(80px, 24cqw, 130px);
+  }
+}
+
+/* ── Curtains, search, settings ────────────────────────────────────────── */
+
+[data-skin='putty'] .curtain,
+[data-skin='putty'] .boundary {
+  background: var(--pt-paper);
+}
+
+[data-skin='putty'] .curtain-title,
+[data-skin='putty'] .boundary-title {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .curtain-btn,
+[data-skin='putty'] .boundary-btn {
+  font-family: var(--pt-mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--pt-ink);
+  border-radius: 10px;
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up);
+}
+
+[data-skin='putty'] .curtain-btn:hover:not(:disabled),
+[data-skin='putty'] .boundary-btn:hover {
+  color: var(--pt-ink);
+  box-shadow: var(--pt-key-up);
+}
+
+[data-skin='putty'] .search-scrim {
+  background: var(--pt-scrim);
+}
+
+[data-skin='putty'] .linkcard {
+  background: var(--pt-module);
+  box-shadow: var(--pt-module-lift);
+  border-radius: 14px;
+}
+
+[data-skin='putty'] .linkcard-btn {
+  color: #fff;
+}
+
+/* Search and Settings: result and option titles in DM Sans 500, upright. */
+[data-skin='putty'] .search-input,
+[data-skin='putty'] .search-prompt,
+[data-skin='putty'] .search-empty,
+[data-skin='putty'] .sresult-title,
+[data-skin='putty'] .stop-title,
+[data-skin='putty'] .stile-title,
+[data-skin='putty'] .search-drill-title,
+[data-skin='putty'] .linkcard-title,
+[data-skin='putty'] .settings-title,
+[data-skin='putty'] .set-heading,
+[data-skin='putty'] .tapseg-title,
+[data-skin='putty'] .set-row-title,
+[data-skin='putty'] .skincard-label,
+[data-skin='putty'] .home-room-name,
+[data-skin='putty'] .about-name,
+[data-skin='putty'] .about-line {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+[data-skin='putty'] .search-chip-count,
+[data-skin='putty'] .stile-mono {
+  font-family: var(--pt-mono);
+  font-style: normal;
+}
+
+/* The status line reads out on a little graphite display. */
+[data-skin='putty'] .status-pill {
+  font-family: var(--pt-mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--pt-led);
+  background: var(--pt-panel);
+  border-radius: 10px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 10px 24px -10px rgba(60, 50, 35, 0.5);
+}
+
+[data-skin='putty'] .status-pill.is-bad {
+  color: #ffb08f;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(242, 100, 62, 0.5),
+    0 10px 24px -10px rgba(60, 50, 35, 0.5);
+}
+
+/* ── Scrollbars, selection, focus ──────────────────────────────────────── */
+
+[data-skin='putty'] .scroll::-webkit-scrollbar-thumb {
+  background: var(--pt-scroll-thumb);
+}
+
+[data-skin='putty'] ::selection {
+  background: rgba(232, 121, 79, 0.35);
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] :focus-visible {
+  outline: 2px solid var(--pt-tangerine);
+  outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PUTTY NIGHT — warm charcoal with the same pops. Follows the system's
+   appearance (prefers-color-scheme) unless Settings pins light or Night
+   (html[data-putty-mode]). Every colour above goes through a --pt-* token,
+   so Night is this one block of tokens, written twice (pinned, and auto in
+   the dark), plus a little restrained glow on the lit things.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+[data-skin='putty'][data-putty-mode='night'] {
+
+  color-scheme: dark;
+
+  --pt-paper: #1e1d1a;
+  --pt-shell: #28261f;
+  --pt-fog: #181714;
+  --pt-stone: #5a5750;
+  --pt-graphite: #121110;
+  --pt-ink: #ece7dd;
+  --pt-ink-2: #a39d92;
+  --pt-led-off: rgba(255, 255, 255, 0.05);
+  --pt-hole-color: #3c3a35;
+  --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+
+  --pt-module: linear-gradient(165deg, #302e2a, #28261f 60%, #211f1b);
+  --pt-module-lift: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 28px -12px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.35);
+  --pt-rail: linear-gradient(170deg, #302e2a, #28261f 55%, #211f1b);
+  --pt-key: linear-gradient(180deg, #3e3c37, #312f2b);
+  --pt-key-up: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+  --pt-key-down: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --pt-key-up-2: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311;
+  --pt-key-up-3: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311;
+  --pt-key-down-1: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311;
+  --pt-key-soft: var(--pt-key-up);
+  --pt-key-tool: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311, 0 4px 8px -4px rgba(0, 0, 0, 0.6);
+  --pt-raised: linear-gradient(180deg, #3b3934, #322f2b);
+  --pt-raised-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513, 0 8px 14px -8px rgba(0, 0, 0, 0.6);
+  --pt-chip-up: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513;
+  --pt-chip-down: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #161513;
+  --pt-tray: #181714;
+  --pt-tray-sink: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-smallkey: #2b2925;
+  --pt-smallkey-up: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 #141311;
+  --pt-smallkey-down: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #141311;
+  --pt-play: linear-gradient(180deg, #55524b, #46433d);
+  --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+  --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --pt-slot: #151412;
+  --pt-fader-slot: #151412;
+  --pt-slot-sink: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-cap: linear-gradient(180deg, #56534c, #423f3a);
+  --pt-cap-lift: 0 4px 8px -2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --pt-cap-lift-hover: 0 6px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --pt-thumb: #ece7dd;
+  --pt-thumb-lift: 0 2px 5px rgba(0, 0, 0, 0.6);
+  --pt-tick: #5a5750;
+  --pt-tick-major: #8a857c;
+  --pt-panel: radial-gradient(circle at 30% 20%, #1f1e1b, #121110 70%);
+  --pt-panel-sink: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --pt-art-shadow: 0 24px 44px -16px rgba(0, 0, 0, 0.85), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --pt-sleeve-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35);
+  --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(0, 0, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --pt-thumbnail-shadow: 0 3px 6px -2px rgba(0, 0, 0, 0.6);
+  --pt-hover: rgba(255, 255, 255, 0.04);
+  --pt-ink-wash: rgba(236, 231, 221, 0.06);
+  --pt-ink-off: rgba(236, 231, 221, 0.28);
+  --pt-scrim: rgba(30, 29, 26, 0.97);
+  --pt-scroll-thumb: rgba(236, 231, 221, 0.18);
+
+  --pt-grain: url('./putty/noise-light.svg');
+  --pt-grain-opacity: 0.17;
+  --pt-grain-blend: screen;
+
+  --bg-deep: #1e1d1a;
+  --bg: #1e1d1a;
+  --bg-raised: #28261f;
+  --walnut: #181714;
+  --walnut-light: #302e2a;
+  --cream: #ece7dd;
+  --cream-dim: #a39d92;
+  --cream-faint: #7d786e;
+  --cream-ghost: rgba(236, 231, 221, 0.12);
+  --wine: #121110;
+}
+
+/* A restrained glow on the lit things. */
+[data-skin='putty'][data-putty-mode='night'] .faceplate .knob-body,
+[data-skin='putty'][data-putty-mode='night'] .pt-volume .knob-body {
+  box-shadow:
+    0 0 28px -4px rgba(232, 121, 79, 0.35),
+    0 14px 26px -10px rgba(0, 0, 0, 0.8),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .pt-pocket .knob-body {
+  box-shadow:
+    0 0 20px -4px rgba(232, 121, 79, 0.35),
+    0 10px 18px -8px rgba(0, 0, 0, 0.8),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .pt-dot-on {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--led-on) 75%, transparent));
+}
+
+[data-skin='putty'][data-putty-mode='night'] .progress-played {
+  box-shadow: 0 0 8px rgba(232, 121, 79, 0.45);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .putty.is-playing .pt-led {
+  box-shadow: 0 0 0 2px rgba(141, 170, 130, 0.18), 0 0 8px rgba(141, 170, 130, 0.6);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .room.is-selected::after {
+  box-shadow: 0 0 8px rgba(232, 121, 79, 0.7);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .room-marker,
+[data-skin='putty'][data-putty-mode='night'] .fader-name::before,
+[data-skin='putty'][data-putty-mode='night'] .phone-room-marker {
+  box-shadow: 0 0 6px -1px var(--room-dot, transparent);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .mod.is-on::after {
+  box-shadow: 0 0 6px rgba(232, 121, 79, 0.6);
+}
+
+[data-skin='putty'][data-putty-mode='night'] .crate-bill-mark {
+  color: rgba(236, 231, 221, 0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-skin='putty']:not([data-putty-mode='light']) {
+
+    color-scheme: dark;
+
+    --pt-paper: #1e1d1a;
+    --pt-shell: #28261f;
+    --pt-fog: #181714;
+    --pt-stone: #5a5750;
+    --pt-graphite: #121110;
+    --pt-ink: #ece7dd;
+    --pt-ink-2: #a39d92;
+    --pt-led-off: rgba(255, 255, 255, 0.05);
+    --pt-hole-color: #3c3a35;
+    --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+
+    --pt-module: linear-gradient(165deg, #302e2a, #28261f 60%, #211f1b);
+    --pt-module-lift: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 28px -12px rgba(0, 0, 0, 0.7),
+      0 2px 4px rgba(0, 0, 0, 0.35);
+    --pt-rail: linear-gradient(170deg, #302e2a, #28261f 55%, #211f1b);
+    --pt-key: linear-gradient(180deg, #3e3c37, #312f2b);
+    --pt-key-up: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+    --pt-key-down: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+    --pt-key-up-2: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311;
+    --pt-key-up-3: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 3px 0 #141311;
+    --pt-key-down-1: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 1px 0 #141311;
+    --pt-key-soft: var(--pt-key-up);
+    --pt-key-tool: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 2px 0 #141311, 0 4px 8px -4px rgba(0, 0, 0, 0.6);
+    --pt-raised: linear-gradient(180deg, #3b3934, #322f2b);
+    --pt-raised-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513, 0 8px 14px -8px rgba(0, 0, 0, 0.6);
+    --pt-chip-up: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 3px 0 #161513;
+    --pt-chip-down: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #161513;
+    --pt-tray: #181714;
+    --pt-tray-sink: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-smallkey: #2b2925;
+    --pt-smallkey-up: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 #141311;
+    --pt-smallkey-down: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #141311;
+    --pt-play: linear-gradient(180deg, #55524b, #46433d);
+    --pt-play-up: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 0 #141311, 0 6px 10px -4px rgba(0, 0, 0, 0.6);
+    --pt-play-down: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #141311, 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+    --pt-slot: #151412;
+    --pt-fader-slot: #151412;
+    --pt-slot-sink: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-cap: linear-gradient(180deg, #56534c, #423f3a);
+    --pt-cap-lift: 0 4px 8px -2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    --pt-cap-lift-hover: 0 6px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --pt-thumb: #ece7dd;
+    --pt-thumb-lift: 0 2px 5px rgba(0, 0, 0, 0.6);
+    --pt-tick: #5a5750;
+    --pt-tick-major: #8a857c;
+    --pt-panel: radial-gradient(circle at 30% 20%, #1f1e1b, #121110 70%);
+    --pt-panel-sink: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --pt-art-shadow: 0 24px 44px -16px rgba(0, 0, 0, 0.85), 0 4px 8px rgba(0, 0, 0, 0.4);
+    --pt-sleeve-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35);
+    --pt-sleeve-shadow-hover: 0 14px 22px -10px rgba(0, 0, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.4);
+    --pt-thumbnail-shadow: 0 3px 6px -2px rgba(0, 0, 0, 0.6);
+    --pt-hover: rgba(255, 255, 255, 0.04);
+    --pt-ink-wash: rgba(236, 231, 221, 0.06);
+    --pt-ink-off: rgba(236, 231, 221, 0.28);
+    --pt-scrim: rgba(30, 29, 26, 0.97);
+    --pt-scroll-thumb: rgba(236, 231, 221, 0.18);
+
+    --pt-grain: url('./putty/noise-light.svg');
+    --pt-grain-opacity: 0.17;
+    --pt-grain-blend: screen;
+
+    --bg-deep: #1e1d1a;
+    --bg: #1e1d1a;
+    --bg-raised: #28261f;
+    --walnut: #181714;
+    --walnut-light: #302e2a;
+    --cream: #ece7dd;
+    --cream-dim: #a39d92;
+    --cream-faint: #7d786e;
+    --cream-ghost: rgba(236, 231, 221, 0.12);
+    --wine: #121110;
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .faceplate .knob-body,
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-volume .knob-body {
+    box-shadow:
+      0 0 28px -4px rgba(232, 121, 79, 0.35),
+      0 14px 26px -10px rgba(0, 0, 0, 0.8),
+      inset 0 2px 1px rgba(255, 255, 255, 0.35),
+      inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-pocket .knob-body {
+    box-shadow:
+      0 0 20px -4px rgba(232, 121, 79, 0.35),
+      0 10px 18px -8px rgba(0, 0, 0, 0.8),
+      inset 0 2px 1px rgba(255, 255, 255, 0.35),
+      inset 0 -3px 6px rgba(120, 50, 20, 0.3);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .pt-dot-on {
+    filter: drop-shadow(0 0 2px color-mix(in srgb, var(--led-on) 75%, transparent));
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .progress-played {
+    box-shadow: 0 0 8px rgba(232, 121, 79, 0.45);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .putty.is-playing .pt-led {
+    box-shadow: 0 0 0 2px rgba(141, 170, 130, 0.18), 0 0 8px rgba(141, 170, 130, 0.6);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .room.is-selected::after {
+    box-shadow: 0 0 8px rgba(232, 121, 79, 0.7);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .room-marker,
+  [data-skin='putty']:not([data-putty-mode='light']) .fader-name::before,
+  [data-skin='putty']:not([data-putty-mode='light']) .phone-room-marker {
+    box-shadow: 0 0 6px -1px var(--room-dot, transparent);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .mod.is-on::after {
+    box-shadow: 0 0 6px rgba(232, 121, 79, 0.6);
+  }
+
+  [data-skin='putty']:not([data-putty-mode='light']) .crate-bill-mark {
+    color: rgba(236, 231, 221, 0.7);
+  }
+}
+
+/* Settings: Auto · Light · Night, three keys in a tray. */
+[data-skin='putty'] .pt-mode-row {
+  flex-wrap: wrap;
+}
+
+[data-skin='putty'] .pt-modeseg {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+[data-skin='putty'] .pt-modeseg-opt {
+  min-width: 64px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-family: var(--pt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-ink-2);
+  transition: color var(--t) var(--ease), background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+[data-skin='putty'] .pt-modeseg-opt:hover {
+  color: var(--pt-ink);
+}
+
+[data-skin='putty'] .pt-modeseg-opt.is-on {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-2);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PHONE (below 760px, MobileShell)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+[data-skin='putty'] .phone {
+  background: var(--pt-paper);
+  isolation: isolate;
+}
+
+/* Header: a raised room chip, a search key, a settings key. */
+html[data-skin='putty'][data-shell='phone'] .phone-head {
+  gap: 8px;
+  height: calc(64px + var(--safe-top));
+  padding: var(--safe-top) 16px 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room {
+  gap: 10px;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--pt-raised);
+  box-shadow: var(--pt-chip-up);
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room:active {
+  transform: translateY(2px);
+  box-shadow: var(--pt-chip-down);
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room-marker {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--room-dot, var(--pt-stone));
+  box-shadow: var(--pt-dot-sink);
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room-text {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room .room-name {
+  font-size: 15px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-room .room-with {
+  font-size: 10px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-tool {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-up-3);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-tool svg {
+  width: 17px;
+  height: 17px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-tool:active {
+  color: var(--pt-ink);
+  background: var(--pt-key);
+  transform: translateY(2px);
+  box-shadow: var(--pt-key-down-1);
+}
+
+/* Tab bar: a tray holding four keycap tabs. */
+html[data-skin='putty'][data-shell='phone'] .phone-tabs {
+  gap: 6px;
+  margin: 12px 12px calc(12px + var(--safe-bottom));
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--pt-tray);
+  box-shadow: var(--pt-tray-sink);
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab {
+  gap: 4px;
+  height: 58px;
+  border-radius: 9px;
+  color: var(--pt-ink-2);
+  transition: color var(--t) var(--ease), background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab svg {
+  width: 19px;
+  height: 19px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab-label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab.is-active,
+html[data-skin='putty'][data-shell='phone'] .mtab.is-active .mtab-label,
+html[data-skin='putty'][data-shell='phone'] .mtab.is-active svg {
+  color: var(--pt-ink);
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab.is-active {
+  background: var(--pt-key);
+  box-shadow: var(--pt-key-soft);
+}
+
+html[data-skin='putty'][data-shell='phone'] .mtab.is-active::before {
+  display: none;
+}
+
+/* Every page is a module on the desk. */
+html[data-skin='putty'][data-shell='phone'] .phone-page {
+  padding: 6px 12px 0;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page > .panel,
+html[data-skin='putty'][data-shell='phone'] .phone-page > .rooms {
+  position: relative;
+  isolation: isolate;
+  border-radius: 16px;
+  background: var(--pt-rail);
+  box-shadow: var(--pt-module-lift);
+  overflow: hidden;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page > .panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: url('./putty/noise-dark.svg');
+  opacity: 0.11;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page > .panel {
+  padding-top: 14px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .queue {
+  padding: 0 10px 14px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .qrow-main {
+  padding: 6px 44px 6px 8px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .crate {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 14px;
+  padding: 2px 14px 18px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .crate-caption {
+  font-size: 15px;
+}
+
+/* Rooms as a page. */
+html[data-skin='putty'][data-shell='phone'] .rooms-head {
+  padding: 14px 20px 6px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .rooms-list {
+  padding: 0 12px 6px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .room {
+  min-height: 54px;
+  padding: 10px 12px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .room-name {
+  font-size: 16px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .rooms-everywhere {
+  min-height: 44px;
+  margin: 6px 12px 0;
+  padding: 0;
+}
+
+/* The rooms sheet. */
+html[data-skin='putty'][data-shell='phone'] .sheet {
+  background: var(--pt-module);
+  border-radius: 18px 18px 0 0;
+  box-shadow: var(--pt-module-lift), 0 -24px 60px rgba(60, 50, 35, 0.25);
+}
+
+html[data-skin='putty'][data-shell='phone'] .sheet-grip {
+  background: var(--pt-stone);
+}
+
+/* Now: one module; the volume deck folds into it (see putty.css). */
+html[data-skin='putty'][data-shell='phone'] .stage {
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .stage > .stage-scroll {
+  container: putty-stage / inline-size;
+  flex: 1 0 auto;
+  padding: 18px 18px 16px;
+  border-radius: 16px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .stage-putty .faceplate {
+  display: none;
+}
+
+html[data-skin='putty'][data-shell='phone'] .progress-track {
+  height: 44px;
+  margin-block: -11px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .progress-time {
+  font-size: 10px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .transport {
+  gap: 7px;
+  padding: 6px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .tactile,
+html[data-skin='putty'][data-shell='phone'] .tactile-sm,
+html[data-skin='putty'][data-shell='phone'] .tactile-lg,
+html[data-skin='putty'][data-shell='phone'] .mod {
+  height: 54px;
+  min-width: 0;
+}
+
+/* The rooms page's volume module: the dial on the left, the room faders
+   stacked beside it, each a name line over its slot. */
+html[data-skin='putty'][data-shell='phone'] .pt-volume {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px 20px;
+  border-radius: 16px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .knob-block {
+  padding-bottom: 14px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .knob {
+  width: 132px;
+  height: 132px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .knob-body {
+  inset: 24px;
+  box-shadow:
+    0 12px 22px -9px rgba(150, 70, 30, 0.55),
+    0 3px 6px rgba(120, 60, 30, 0.25),
+    inset 0 2px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(120, 50, 20, 0.25);
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .knob-pointer {
+  top: 8px;
+  height: 20px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .knob-value {
+  top: calc(100% + 16px);
+  font-size: 11px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders {
+  min-width: 0;
+  gap: 0;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders-caption {
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders-list {
+  gap: 6px;
+  padding-right: 0;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'mute name value' 'rail rail rail';
+  align-items: center;
+  column-gap: 4px;
+  row-gap: 0;
+  min-height: 0;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-mute {
+  grid-area: mute;
+  width: 32px;
+  height: 32px;
+  margin-left: -9px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-name {
+  grid-area: name;
+  width: auto;
+  padding-left: 16px;
+  font-size: 10px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-name::before {
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-value {
+  grid-area: value;
+  width: auto;
+  font-size: 10px;
+}
+
+/* A 44px hit area around a 6px slot; the cap is 18 by 24. */
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-rail {
+  grid-area: rail;
+  height: 44px;
+  margin-block: -10px -8px;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-slot {
+  inset: 10px 0;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-cap {
+  width: 18px;
+  height: 24px;
+  margin-left: -9px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders-list {
+  overflow: visible;
+  padding-bottom: 10px;
+}
+
+/* The rooms page scrolls as one: the room list, then the volume module. */
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms']::-webkit-scrollbar {
+  display: none;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] > .rooms {
+  flex: none;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-list {
+  flex: none;
+  overflow: visible;
+}
+
+/* The rooms page fits a phone without scrolling for a usual household:
+   slightly shorter room rows, and a tighter volume module. */
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-head {
+  padding: 10px 20px 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-list li + li {
+  margin-top: 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .room {
+  min-height: 48px;
+  padding: 7px 12px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-foot {
+  padding: 10px 20px 12px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume {
+  padding: 12px 18px 16px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders-list {
+  gap: 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-mute {
+  width: 28px;
+  height: 28px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-rail {
+  margin-block: -12px -8px;
+}

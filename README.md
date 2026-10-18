@@ -70,6 +70,7 @@ device.
 | Daylight | Light, quiet, modern |
 | Deck | DJ controller, orange LEDs, red waveforms |
 | Prism | Light through glass, a spectrum on the wall (in progress) |
+| Putty | Soft hardware, warm greys, a little grain (design: Zoe, brief in `docs/skins/putty.md`) |
 
 ## How discovery works
 
