@@ -42,6 +42,14 @@
   --pt-mist: #90b2c1;
   --pt-led: #f2643e;
   --pt-led-dim: #9a4c34;
+  --pt-led-off: rgba(255, 255, 255, 0.07);
+  --pt-hole-color: #aba59b;
+  --pt-hole-sink: inset 0 1px 1px rgba(0, 0, 0, 0.35);
+
+  /* The track's colour: clock LEDs and the grille's breath (see putty.css). */
+  --led-on: #f2643e;
+  --led-dim: #9a4c34;
+  --breath: #e9a07c;
 
   --pt-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
   --pt-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;

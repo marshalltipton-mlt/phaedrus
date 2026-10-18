@@ -144,7 +144,7 @@ export default function NowPlaying() {
       <VolumeKnob />
       <Faders />
       {skin === 'hifi' && <HifiMeters playing={!!playing} />}
-      {skin === 'putty' && <PuttyGrille className="pt-grille-deck" />}
+      {skin === 'putty' && <PuttyGrille className="pt-grille-deck" cols={14} rows={8} />}
       <div className="faceplate-brand" aria-hidden="true">
         <i className={`faceplate-led${playing ? ' is-lit' : ''}`} />
         <span>Phædrus</span>

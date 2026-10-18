@@ -158,27 +158,66 @@
 }
 
 /* ── Speaker grille: 5px holes on an 11px pitch, each shaded at the top
-   like a punched hole ─────────────────────────────────────────────────── */
+   like a punched hole. While music plays the holes breathe in the track's
+   colour (--breath), each one's phase set by its distance from the centre
+   (PuttyGrille), so a slow ripple spreads outward. ─────────────────────── */
+
+@keyframes ptBreath {
+  0%,
+  100% {
+    background-color: var(--pt-hole-color);
+    transform: scale(1);
+  }
+  50% {
+    background-color: var(--breath);
+    transform: scale(1.3);
+  }
+}
 
 .pt-grille {
-  display: block;
-  background-image:
-    radial-gradient(circle at 5.5px 6.1px, #aba59b 0 2px, transparent 2.3px),
-    radial-gradient(circle at 5.5px 5.5px, #8a857c 0 2.5px, transparent 2.8px);
-  background-size: 11px 11px;
-  background-repeat: space;
+  --pt-hole: 5px;
+  display: grid;
+  gap: 6px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pt-grille i {
+  width: var(--pt-hole);
+  height: var(--pt-hole);
+  border-radius: 50%;
+  background-color: var(--pt-hole-color);
+  box-shadow: var(--pt-hole-sink);
+}
+
+.pt-grille.is-breathing i {
+  animation: ptBreath 3.6s ease-in-out infinite;
+}
+
+/* Paused: frozen mid-breath, which looks calm. */
+.pt-grille.is-held i {
+  animation-play-state: paused;
 }
 
 .pt-grille-type {
   width: min(100%, 374px);
-  height: 33px;
-  margin-top: 16px;
+  /* A breath swells a hole by 30%: room for it at the edges. */
+  padding: 2px 1px;
+  margin-top: 14px;
 }
 
 /* In the volume deck, where Hi-Fi has its meters. */
 .pt-grille-deck {
   flex: 0 0 154px;
-  height: 88px;
+  padding: 2px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-grille i,
+  .pt-matrix svg,
+  .pt-dot {
+    animation: none !important;
+  }
 }
 
 /* ── The deck: keycaps and the clock ─────────────────────────────────── */
@@ -230,16 +269,55 @@
   padding: 14px 18px;
 }
 
+/* Lit dots take the track's colour from the stage; the dots themselves never
+   transition (a scroll would smear), only the colour tokens do. */
 .pt-dot-on {
-  fill: var(--pt-led);
+  fill: var(--led-on);
 }
 
 .pt-dot-dim {
-  fill: var(--pt-led-dim);
+  fill: var(--led-dim);
 }
 
 .pt-dot-off {
-  fill: rgba(255, 255, 255, 0.07);
+  fill: var(--pt-led-off);
+}
+
+/* The last ten seconds: the bright colon ticks with the seconds. */
+@keyframes ptTick {
+  0% {
+    opacity: 0.25;
+  }
+  35%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.pt-dot-tick {
+  animation: ptTick 1s ease-out infinite;
+  animation-delay: var(--pt-tick-phase, 0s);
+}
+
+/* Paused: the whole display rests, slowly dimming and brightening. */
+@keyframes ptDim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pt-matrix svg.is-resting {
+  animation: ptDim 2.6s ease-in-out infinite;
+}
+
+/* Out of sight, nothing runs. */
+.putty.is-hidden .pt-matrix svg,
+.putty.is-hidden .pt-dot {
+  animation-play-state: paused;
 }
 
 /* Not room for both on one line: the clock gets a row of its own. */

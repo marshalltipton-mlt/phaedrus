@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { livePosition, useSonos } from '../store/useSonos';
+import { useReducedMotion } from '../hooks/useReducedMotion';
+import { BLANK, columns, type Column } from '../lib/puttyFont';
 import Progress from './Progress';
 import Transport from './Transport';
 import VolumeKnob from './VolumeKnob';
@@ -17,9 +19,21 @@ import '../styles/putty.css';
    with the dot-matrix clock to its right. On a phone the clock shrinks to
    the elapsed time and sits beside a small knob.
 
-   Nothing here moves on its own: the clock only ticks while the music
-   plays and the window is seen.
+   Motion (Zoe's motion study), all of it slow, and none of it while the
+   window is hidden or the system asks for reduced motion:
+     · the clock's colon is steady, and ticks once a second through the
+       last ten seconds of a track;
+     · on a new track, TITLE · ARTIST scrolls through the display once,
+       a column every 45ms, then the time comes back;
+     · paused, the whole display slowly dims and brightens;
+     · the grilles breathe: a ripple out from the centre while music
+       plays, frozen mid-breath when it pauses.
    ══════════════════════════════════════════════════════════════════════════ */
+
+/** Columns in the desk clock ("mm:ss / mm:ss") and the phone's ("mm:ss"). */
+const CLOCK_COLS = 66;
+const POCKET_COLS = 26;
+const SCROLL_MS = 45;
 
 const SOURCE: Record<string, string> = {
   queue: 'Queue',
@@ -76,6 +90,67 @@ function useElapsed(playing: boolean): number {
   return secs;
 }
 
+/** Whether the window is out of sight. */
+function useHidden(): boolean {
+  const [hidden, setHidden] = useState(() => document.hidden);
+  useEffect(() => {
+    const on = () => setHidden(document.hidden);
+    document.addEventListener('visibilitychange', on);
+    return () => document.removeEventListener('visibilitychange', on);
+  }, []);
+  return hidden;
+}
+
+/**
+ * How far a new track's title has scrolled through the display, in columns,
+ * or null when the display shows the time. Starts on a track change (not on
+ * first paint), holds while paused or hidden, and never runs with reduced
+ * motion. It is done once the text has left the widest display.
+ */
+function useTrackScroll(key: string | undefined, length: number, run: boolean, reduced: boolean): number | null {
+  const [offset, setOffset] = useState<number | null>(null);
+  const last = useRef(key);
+
+  useEffect(() => {
+    if (key === last.current) return;
+    last.current = key;
+    setOffset(key && !reduced ? 0 : null);
+  }, [key, reduced]);
+
+  useEffect(() => {
+    if (reduced) setOffset(null);
+  }, [reduced]);
+
+  const scrolling = offset !== null;
+  useEffect(() => {
+    if (!scrolling || !run) return;
+    const end = length + CLOCK_COLS;
+    const t = window.setInterval(() => {
+      setOffset((o) => (o === null || o + 1 >= end ? null : o + 1));
+    }, SCROLL_MS);
+    return () => clearInterval(t);
+  }, [scrolling, run, length]);
+
+  return offset;
+}
+
+/** A window of `width` columns onto text passing through, blank either side. */
+function windowOnto(text: Column[], width: number, offset: number): Column[] {
+  const out: Column[] = [];
+  for (let i = 0; i < width; i++) {
+    const at = offset + i - width;
+    out.push(at >= 0 && at < text.length ? text[at] : BLANK);
+  }
+  return out;
+}
+
+/** Exactly `width` columns: cut, or padded with blanks. */
+function fit(cols: Column[], width: number): Column[] {
+  const out = cols.slice(0, width);
+  while (out.length < width) out.push(BLANK);
+  return out;
+}
+
 export default function PuttyStage() {
   const state = useSonos((s) => s.state);
   const group = useSonos((s) => s.group);
@@ -92,18 +167,43 @@ export default function PuttyStage() {
       : undefined
     : track?.album;
 
+  const reduced = useReducedMotion();
+  const hidden = useHidden();
   const elapsed = useElapsed(!!playing);
   const duration = state?.durationSecs ?? 0;
   const timed = !state?.isRadio && duration > 0;
   const now = clock(timed ? Math.min(elapsed, duration) : elapsed);
   const total = clock(duration);
 
+  // The clock: the time, or a new track's title passing through once.
+  const trackKey = idle ? undefined : state?.isRadio ? `radio:${state.stationName ?? title}` : (track?.uri ?? `${title}|${artist}`);
+  const scrollText = useMemo(
+    () => columns(artist ? `${title ?? ''} · ${artist}` : (title ?? '')),
+    [title, artist],
+  );
+  const offset = useTrackScroll(trackKey, scrollText.length, !!playing && !hidden, reduced);
+  const timeCols = useMemo(
+    () => columns(timed ? `${now} / ${total}` : now, (i) => (timed && i >= now.length ? 'dim' : 'on')),
+    [now, total, timed],
+  );
+  const pocketScrolling = offset !== null && offset < scrollText.length + POCKET_COLS;
+  const deskCols = offset !== null ? windowOnto(scrollText, CLOCK_COLS, offset) : fit(timeCols, CLOCK_COLS);
+  const pocketCols = pocketScrolling
+    ? windowOnto(scrollText, POCKET_COLS, offset)
+    : fit(columns(now), POCKET_COLS);
+
+  // The colon ticks with the seconds through a track's last ten.
+  const tick = timed && !!playing && offset === null && !reduced && duration - elapsed <= 10;
+  const tickPhase = tick ? livePosition(useSonos.getState()) % 1 : 0;
+  const rest = !playing && !idle && !reduced;
+  const clockLabel = timed ? `Time ${now} of ${total}` : `Time ${now}`;
+
   const position =
     state?.queueIndex && state.queueLength ? `${two(state.queueIndex)}/${two(state.queueLength)}` : undefined;
   const members = state?.members.length ?? group?.members.length ?? 0;
 
   return (
-    <div className={`putty${playing ? ' is-playing' : ''}`}>
+    <div className={`putty${playing ? ' is-playing' : ''}${hidden ? ' is-hidden' : ''}`}>
       <header className="pt-top label">
         <span className="pt-top-room">● {group?.name ?? '—'}</span>
         {state && (
@@ -133,7 +233,7 @@ export default function PuttyStage() {
               {album && <p className="pt-album label">{album}</p>}
             </>
           )}
-          <PuttyGrille className="pt-grille-type" />
+          <PuttyGrille className="pt-grille-type" cols={34} rows={3} />
         </div>
       </div>
 
@@ -141,12 +241,7 @@ export default function PuttyStage() {
 
       <div className="pt-deck">
         <Transport />
-        <PuttyMatrix
-          className="pt-clock"
-          text={timed ? `${now} / ${total}` : now}
-          dimFrom={timed ? now.length : undefined}
-          label={timed ? `Time ${now} of ${total}` : `Time ${now}`}
-        />
+        <PuttyMatrix className="pt-clock" cols={deskCols} tick={tick} tickPhase={tickPhase} rest={rest} label={clockLabel} />
       </div>
 
       {/* On a phone: a small knob, the volume, and the elapsed time alone. */}
@@ -156,7 +251,16 @@ export default function PuttyStage() {
           <span className="label pt-pocket-level">Vol {state?.volume ?? 0}</span>
           <span className="label">{members === 1 ? '1 room' : `${members} rooms`}</span>
         </span>
-        <PuttyMatrix className="pt-clock pt-clock-sm" text={now} dot={3} gap={2} label={`Time ${now}`} />
+        <PuttyMatrix
+          className="pt-clock pt-clock-sm"
+          cols={pocketCols}
+          dot={3}
+          gap={2}
+          tick={tick}
+          tickPhase={tickPhase}
+          rest={rest}
+          label={`Time ${now}`}
+        />
       </div>
     </div>
   );
@@ -176,9 +280,39 @@ function Art({ src, title }: { src?: string; title?: string }) {
   );
 }
 
-/** A patch of speaker grille: round holes punched in the putty. */
-export function PuttyGrille({ className }: { className?: string }) {
-  return <i className={`pt-grille${className ? ` ${className}` : ''}`} aria-hidden="true" />;
+/**
+ * A patch of speaker grille: round holes punched in the putty. While music
+ * plays it breathes, a slow ripple out from the centre (the phase is the
+ * hole's distance from the middle, on an ellipse squashed sideways, so the
+ * wave spreads along the patch). Paused, it freezes mid-breath; hidden or
+ * with reduced motion, it doesn't animate at all.
+ */
+export function PuttyGrille({ className, cols, rows }: { className?: string; cols: number; rows: number }) {
+  const playing = useSonos((s) => s.state?.state === 'PLAYING' || s.state?.state === 'TRANSITIONING');
+  const reduced = useReducedMotion();
+  const hidden = useHidden();
+
+  const holes = useMemo(() => {
+    const cc = (cols - 1) / 2;
+    const cr = (rows - 1) / 2;
+    return Array.from({ length: cols * rows }, (_, i) => {
+      const d = Math.hypot((i % cols - cc) / 1.6, Math.floor(i / cols) - cr);
+      return `${(d * 0.32 - 6).toFixed(2)}s`;
+    });
+  }, [cols, rows]);
+
+  const motion = !reduced && !hidden;
+  return (
+    <div
+      className={`pt-grille${motion ? ' is-breathing' : ''}${playing ? '' : ' is-held'}${className ? ` ${className}` : ''}`}
+      style={{ gridTemplateColumns: `repeat(${cols}, var(--pt-hole))` }}
+      aria-hidden="true"
+    >
+      {holes.map((delay, i) => (
+        <i key={i} style={{ animationDelay: delay }} />
+      ))}
+    </div>
+  );
 }
 
 /** The phone's queue page: what's playing, small, above the list. Tapping it opens Now. */
