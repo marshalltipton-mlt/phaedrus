@@ -114,7 +114,7 @@
 }
 
 .pt-title {
-  font-family: var(--display);
+  font-family: var(--pt-serif);
   font-size: clamp(32px, 7cqw, 56px);
   font-weight: 300;
   font-style: italic;

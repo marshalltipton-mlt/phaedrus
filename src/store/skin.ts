@@ -18,7 +18,7 @@ const KEY = 'phaedrus.skin';
 function recall(): Skin {
   try {
     const v = localStorage.getItem(KEY);
-    if (v === 'hifi' || v === 'board' || v === 'tuner' || v === 'drive' || v === 'daylight' || v === 'deck' || v === 'prism') return v;
+    if (v === 'hifi' || v === 'board' || v === 'tuner' || v === 'drive' || v === 'daylight' || v === 'deck' || v === 'prism' || v === 'putty') return v;
   } catch {
     /* private mode — fall through to the default */
   }

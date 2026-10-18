@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSonos } from '../store/useSonos';
 import { Muted, Sound } from './Icons';
 import type { MemberVolume } from '../api/types';
-import { roomDot } from '../lib/roomDot';
+import { useRoomDots } from '../hooks/useRoomDots';
 import '../styles/faders.css';
 
 export default function Faders() {
@@ -10,6 +10,7 @@ export default function Faders() {
   const listRef = useRef<HTMLUListElement>(null);
   const [edges, setEdges] = useState({ above: false, below: false });
   const count = state?.members.length ?? 0;
+  const dotOf = useRoomDots();
 
   // Past a few rooms the list scrolls; fade whichever edge has rooms beyond it
   // so it is obvious there is more to see.
@@ -45,14 +46,14 @@ export default function Faders() {
         className={`faders-list${edges.above ? ' has-more-above' : ''}${edges.below ? ' has-more-below' : ''}`}
       >
         {state.members.map((m) => (
-          <Fader key={m.uuid} member={m} />
+          <Fader key={m.uuid} member={m} dot={dotOf(m.uuid)} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Fader({ member }: { member: MemberVolume }) {
+function Fader({ member, dot }: { member: MemberVolume; dot?: string }) {
   const setMemberVolume = useSonos((s) => s.setMemberVolume);
   const setMemberMute = useSonos((s) => s.setMemberMute);
   const railRef = useRef<HTMLDivElement>(null);
@@ -88,7 +89,7 @@ function Fader({ member }: { member: MemberVolume }) {
   const pct = member.muted ? 0 : member.volume;
 
   return (
-    <li className={`fader${member.muted ? ' is-muted' : ''}`} data-dot={roomDot(member.uuid)}>
+    <li className={`fader${member.muted ? ' is-muted' : ''}`} data-dot={dot}>
       <button
         type="button"
         className="fader-mute"

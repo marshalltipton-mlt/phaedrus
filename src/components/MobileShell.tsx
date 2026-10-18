@@ -7,7 +7,7 @@ import Crate from './Crate';
 import RoomsRail from './RoomsRail';
 import { PuttyMini, PuttyVolume } from './PuttyStage';
 import { useSkin } from '../store/skin';
-import { roomDot } from '../lib/roomDot';
+import { useRoomDots } from '../hooks/useRoomDots';
 import { Close, Disc, Gear, Search, Sleeves, Speaker, Tracklist } from './Icons';
 import '../styles/mobile.css';
 
@@ -34,6 +34,7 @@ export default function MobileShell() {
   const setSearchOpen = useSonos((s) => s.setSearchOpen);
   const openSettings = useSettingsPanel((s) => s.setOpen);
   const putty = useSkin((s) => s.skin === 'putty');
+  const dotOf = useRoomDots();
 
   // Fixed chrome outside this tree (the status strip, the search overlay)
   // reads this to keep clear of the tab bar and the notch.
@@ -66,7 +67,7 @@ export default function MobileShell() {
         <button type="button" className="phone-room" onClick={openRooms} aria-label="Change room">
           <span
             className="phone-room-marker"
-            data-dot={group ? roomDot(group.coordinatorUuid) : undefined}
+            data-dot={dotOf(group?.coordinatorUuid)}
             aria-hidden="true"
           />
           <span className="phone-room-text">

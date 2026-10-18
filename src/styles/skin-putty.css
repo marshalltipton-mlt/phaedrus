@@ -83,7 +83,11 @@
   --olive: #8daa82;
   --mustard: #eac35f;
 
-  --display: 'IBM Plex Serif', Georgia, serif;
+  /* The serif belongs to one line only, the track playing now (.pt-title,
+     which names it directly). Every other "display" title, in search,
+     settings and the curtains, is a thing you pick: DM Sans. */
+  --pt-serif: 'IBM Plex Serif', Georgia, serif;
+  --display: var(--pt-sans);
   --face: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
   --radius: 10px;
@@ -503,9 +507,9 @@
 }
 
 [data-skin='putty'] .panel-empty-line {
-  font-family: var(--display);
-  font-weight: 300;
-  font-style: italic;
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
   color: var(--pt-ink-2);
 }
 
@@ -676,6 +680,15 @@
 }
 [data-skin='putty'] .ground-wine {
   background: radial-gradient(circle at 30% 20%, #4a4943, #3b3a36 70%);
+}
+
+/* The title shows once, under the sleeve, never on it as well. */
+[data-skin='putty'] .crate-bill-title {
+  display: none;
+}
+
+[data-skin='putty'] .crate-bill {
+  justify-content: flex-end;
 }
 
 [data-skin='putty'] .crate-bill-title,
@@ -1174,10 +1187,10 @@
 
 [data-skin='putty'] .curtain-title,
 [data-skin='putty'] .boundary-title {
-  font-family: var(--display);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: -0.02em;
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
   color: var(--pt-ink);
 }
 
@@ -1212,12 +1225,33 @@
   color: #fff;
 }
 
+/* Search and Settings: result and option titles in DM Sans 500, upright. */
+[data-skin='putty'] .search-input,
+[data-skin='putty'] .search-prompt,
+[data-skin='putty'] .search-empty,
+[data-skin='putty'] .sresult-title,
+[data-skin='putty'] .stop-title,
+[data-skin='putty'] .stile-title,
+[data-skin='putty'] .search-drill-title,
+[data-skin='putty'] .linkcard-title,
 [data-skin='putty'] .settings-title,
-[data-skin='putty'] .set-heading {
-  font-family: var(--display);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: -0.01em;
+[data-skin='putty'] .set-heading,
+[data-skin='putty'] .tapseg-title,
+[data-skin='putty'] .set-row-title,
+[data-skin='putty'] .skincard-label,
+[data-skin='putty'] .home-room-name,
+[data-skin='putty'] .about-name,
+[data-skin='putty'] .about-line {
+  font-family: var(--pt-sans);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+[data-skin='putty'] .search-chip-count,
+[data-skin='putty'] .stile-mono {
+  font-family: var(--pt-mono);
+  font-style: normal;
 }
 
 /* The status line reads out on a little graphite display. */
@@ -1629,4 +1663,40 @@ html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] > .roo
 html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-list {
   flex: none;
   overflow: visible;
+}
+
+/* The rooms page fits a phone without scrolling for a usual household:
+   slightly shorter room rows, and a tighter volume module. */
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-head {
+  padding: 10px 20px 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-list li + li {
+  margin-top: 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .room {
+  min-height: 48px;
+  padding: 7px 12px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .phone-page[data-tab='rooms'] .rooms-foot {
+  padding: 10px 20px 12px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume {
+  padding: 12px 18px 16px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .faders-list {
+  gap: 2px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-mute {
+  width: 28px;
+  height: 28px;
+}
+
+html[data-skin='putty'][data-shell='phone'] .pt-volume .fader-rail {
+  margin-block: -12px -8px;
 }
