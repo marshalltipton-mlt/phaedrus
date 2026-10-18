@@ -157,6 +157,36 @@
   text-overflow: ellipsis;
 }
 
+/* ── The track's colour ────────────────────────────────────────────────
+   Registered, so the stage can ease all three at once when a new track
+   brings a new pop (useTrackPop). Only these tokens transition, never the
+   dots: with the clock scrolling, per-dot fades would smear. */
+
+@property --led-on {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f2643e;
+}
+
+@property --led-dim {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #9a4c34;
+}
+
+@property --breath {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e9a07c;
+}
+
+.stage-putty {
+  transition:
+    --led-on 0.9s ease,
+    --led-dim 0.9s ease,
+    --breath 0.9s ease;
+}
+
 /* ── Speaker grille: 5px holes on an 11px pitch, each shaded at the top
    like a punched hole. While music plays the holes breathe in the track's
    colour (--breath), each one's phase set by its distance from the centre

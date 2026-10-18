@@ -13,7 +13,7 @@ import DriveStage from './DriveStage';
 import DaylightStage from './DaylightStage';
 import DeckStage from './DeckStage';
 import PrismStage from './PrismStage';
-import PuttyStage, { PuttyGrille } from './PuttyStage';
+import PuttyStage, { PuttyGrille, useTrackPop } from './PuttyStage';
 import '../styles/nowplaying.css';
 
 /** How long each line of the board's cycling sub-head holds before it turns. */
@@ -139,6 +139,8 @@ export default function NowPlaying() {
     </div>
   );
 
+  const puttyPop = useTrackPop(skin === 'putty');
+
   const faceplate = (
     <div className="faceplate" role="group" aria-label="Volume">
       <VolumeKnob />
@@ -224,7 +226,7 @@ export default function NowPlaying() {
 
   if (skin === 'putty') {
     return (
-      <section className="stage stage-putty" aria-label="Now playing">
+      <section className="stage stage-putty" aria-label="Now playing" style={puttyPop}>
         <div className="stage-scroll">
           <div className="stage-body">
             <PuttyStage />

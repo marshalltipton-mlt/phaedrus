@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { livePosition, useSonos } from '../store/useSonos';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { BLANK, columns, type Column } from '../lib/puttyFont';
+import { averageColor } from '../lib/color';
+import { POPS, popFor, snapToPop, type Pop } from '../lib/puttyPop';
 import Progress from './Progress';
 import Transport from './Transport';
 import VolumeKnob from './VolumeKnob';
@@ -88,6 +90,39 @@ function useElapsed(playing: boolean): number {
   }, [receivedAt, playing]);
 
   return secs;
+}
+
+/**
+ * The playing track's colour, as the custom properties the clock LEDs and the
+ * grille's breath read. Taken from the cover (snapped to the nearest Putty
+ * pop), or from a hash of the title when there is no cover or no hue in it.
+ * The properties are registered (@property in putty.css), so the stage eases
+ * the whole display from one colour to the next.
+ */
+export function useTrackPop(enabled: boolean): CSSProperties | undefined {
+  const art = useSonos((s) => s.state?.track?.art);
+  const title = useSonos((s) => (s.state?.isRadio ? s.state.stationName : s.state?.track?.title) ?? '');
+  const [pop, setPop] = useState<Pop>(() => popFor(title));
+
+  useEffect(() => {
+    if (!enabled) return;
+    let alive = true;
+    const fallback = popFor(title);
+    if (!art) {
+      setPop(fallback);
+      return;
+    }
+    averageColor(art).then((c) => {
+      if (alive) setPop(c ? snapToPop(c, fallback) : fallback);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [enabled, art, title]);
+
+  if (!enabled) return undefined;
+  const p = POPS[pop];
+  return { ['--led-on' as string]: p.on, ['--led-dim' as string]: p.dim, ['--breath' as string]: p.breath };
 }
 
 /** Whether the window is out of sight. */
