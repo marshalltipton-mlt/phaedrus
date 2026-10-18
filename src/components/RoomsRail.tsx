@@ -4,6 +4,7 @@ import { useSettingsPanel } from '../store/settings';
 import { plural } from '../lib/format';
 import { Gear, Radar } from './Icons';
 import type { Zone } from '../api/types';
+import { roomDot } from '../lib/roomDot';
 import '../styles/rooms.css';
 
 export default function RoomsRail() {
@@ -60,7 +61,7 @@ export default function RoomsRail() {
                   onClick={() => selectGroup(g)}
                   aria-current={selected}
                 >
-                  <span className="room-marker" aria-hidden="true" />
+                  <span className="room-marker" data-dot={roomDot(g.coordinatorUuid)} aria-hidden="true" />
                   <span className="room-text">
                     <span className="room-name">{g.name}</span>
                     {others.length > 0 && (

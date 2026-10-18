@@ -13,6 +13,7 @@ import DriveStage from './DriveStage';
 import DaylightStage from './DaylightStage';
 import DeckStage from './DeckStage';
 import PrismStage from './PrismStage';
+import PuttyStage, { PuttyGrille } from './PuttyStage';
 import '../styles/nowplaying.css';
 
 /** How long each line of the board's cycling sub-head holds before it turns. */
@@ -143,6 +144,7 @@ export default function NowPlaying() {
       <VolumeKnob />
       <Faders />
       {skin === 'hifi' && <HifiMeters playing={!!playing} />}
+      {skin === 'putty' && <PuttyGrille className="pt-grille-deck" />}
       <div className="faceplate-brand" aria-hidden="true">
         <i className={`faceplate-led${playing ? ' is-lit' : ''}`} />
         <span>Phædrus</span>
@@ -212,6 +214,20 @@ export default function NowPlaying() {
         <div className="stage-scroll">
           <div className="stage-body">
             <PrismStage />
+          </div>
+        </div>
+
+        {faceplate}
+      </section>
+    );
+  }
+
+  if (skin === 'putty') {
+    return (
+      <section className="stage stage-putty" aria-label="Now playing">
+        <div className="stage-scroll">
+          <div className="stage-body">
+            <PuttyStage />
           </div>
         </div>
 

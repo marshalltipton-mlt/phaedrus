@@ -346,6 +346,12 @@ const LOOK: Record<Skin, { ground: string; ink: string; font: CSSProperties; str
       '#ff7a5c',
     ],
   },
+  putty: {
+    ground: 'linear-gradient(165deg, #efebe4, #e3dfd6 60%, #d9d4ca)',
+    ink: '#2a2924',
+    font: { fontFamily: "'IBM Plex Serif', Georgia, serif", fontWeight: 300, fontStyle: 'italic', letterSpacing: '-0.02em' },
+    strip: ['#eeebe4', '#d0cbc1', '#3b3a36', '#e8794f', '#8daa82'],
+  },
 };
 
 function Appearance() {

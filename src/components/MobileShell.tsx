@@ -5,6 +5,9 @@ import NowPlaying from './NowPlaying';
 import Queue from './Queue';
 import Crate from './Crate';
 import RoomsRail from './RoomsRail';
+import { PuttyMini, PuttyVolume } from './PuttyStage';
+import { useSkin } from '../store/skin';
+import { roomDot } from '../lib/roomDot';
 import { Close, Disc, Gear, Search, Sleeves, Speaker, Tracklist } from './Icons';
 import '../styles/mobile.css';
 
@@ -30,6 +33,7 @@ export default function MobileShell() {
   const group = useSonos((s) => s.group);
   const setSearchOpen = useSonos((s) => s.setSearchOpen);
   const openSettings = useSettingsPanel((s) => s.setOpen);
+  const putty = useSkin((s) => s.skin === 'putty');
 
   // Fixed chrome outside this tree (the status strip, the search overlay)
   // reads this to keep clear of the tab bar and the notch.
@@ -60,7 +64,11 @@ export default function MobileShell() {
     <div className="phone">
       <header className="phone-head">
         <button type="button" className="phone-room" onClick={openRooms} aria-label="Change room">
-          <span className="phone-room-marker" aria-hidden="true" />
+          <span
+            className="phone-room-marker"
+            data-dot={group ? roomDot(group.coordinatorUuid) : undefined}
+            aria-hidden="true"
+          />
           <span className="phone-room-text">
             <span className="room-name">{group?.name ?? '—'}</span>
             {group && others > 0 && (
@@ -93,9 +101,11 @@ export default function MobileShell() {
 
       <main className="phone-page" data-tab={tab}>
         {tab === 'now' && <NowPlaying />}
+        {tab === 'queue' && putty && <PuttyMini onOpen={() => setTab('now')} />}
         {tab === 'queue' && <Queue />}
         {tab === 'crate' && <Crate />}
         {tab === 'rooms' && <RoomsRail />}
+        {tab === 'rooms' && putty && <PuttyVolume />}
       </main>
 
       <nav className="phone-tabs" role="tablist" aria-label="Sections">

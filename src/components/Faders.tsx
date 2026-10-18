@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSonos } from '../store/useSonos';
 import { Muted, Sound } from './Icons';
 import type { MemberVolume } from '../api/types';
+import { roomDot } from '../lib/roomDot';
 import '../styles/faders.css';
 
 export default function Faders() {
@@ -87,7 +88,7 @@ function Fader({ member }: { member: MemberVolume }) {
   const pct = member.muted ? 0 : member.volume;
 
   return (
-    <li className={`fader${member.muted ? ' is-muted' : ''}`}>
+    <li className={`fader${member.muted ? ' is-muted' : ''}`} data-dot={roomDot(member.uuid)}>
       <button
         type="button"
         className="fader-mute"
