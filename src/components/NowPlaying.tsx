@@ -14,6 +14,7 @@ import DaylightStage from './DaylightStage';
 import DeckStage from './DeckStage';
 import PrismStage from './PrismStage';
 import PuttyStage, { PuttyGrille, useTrackPop } from './PuttyStage';
+import NightdriveStage, { NightdriveDeck } from './NightdriveStage';
 import '../styles/nowplaying.css';
 
 /** How long each line of the board's cycling sub-head holds before it turns. */
@@ -234,6 +235,20 @@ export default function NowPlaying() {
         </div>
 
         {faceplate}
+      </section>
+    );
+  }
+
+  if (skin === 'nightdrive') {
+    return (
+      <section className="stage stage-nightdrive" aria-label="Now playing">
+        <div className="stage-scroll">
+          <div className="stage-body">
+            <NightdriveStage />
+          </div>
+        </div>
+
+        <NightdriveDeck />
       </section>
     );
   }
