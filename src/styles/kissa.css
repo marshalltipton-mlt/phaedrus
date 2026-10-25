@@ -1,0 +1,936 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   KISSA — the counter (KissaStage) and the deck's VFD window (KissaDeck).
+   The rails, the menu card, the transport, the knob and the phone are in
+   skin-kissa.css. Everything here is scoped to html[data-skin='kissa'].
+
+   The scene is measured in --s, the sleeve's side. The platter is 1.46 --s
+   across and squashed to 0.36 of its height: the counter seen from a stool.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+html[data-skin='kissa'] .kissa {
+  --s: clamp(118px, min(calc(100cqw / 2.62), calc((100cqh - 292px) / 1.42)), 300px);
+  --D: calc(var(--s) * 1.46);
+  --k: 0.36;
+  --ks-tint: rgba(240, 168, 104, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(12px, 2.2cqh, 22px);
+  width: calc(var(--s) * 2.62);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* ── The scene ─────────────────────────────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-scene {
+  position: relative;
+  width: 100%;
+  height: calc(var(--s) * 1.42);
+  flex: none;
+  isolation: isolate;
+}
+
+/* The glass counter: a dark, slightly cool slab whose far edge melts into
+   the room, glitter caught in it, the room's lights lying on it, and a
+   bright front edge where the glass is cut. */
+html[data-skin='kissa'] .ks-glass {
+  position: absolute;
+  left: -9%;
+  right: -9%;
+  top: calc(var(--s) * 0.74);
+  bottom: calc(var(--s) * -0.02);
+  z-index: 0;
+  background:
+    linear-gradient(180deg, transparent, rgba(14, 12, 14, 0.55) 26%, rgba(20, 17, 20, 0.86) 70%, rgba(26, 21, 22, 0.94)),
+    linear-gradient(90deg, transparent, rgba(200, 210, 255, 0.025) 30%, rgba(255, 220, 190, 0.035) 70%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+
+/* Glitter: two noise tiles thresholded into sparse specks (no grid can show),
+   fading toward the back of the counter. Static. */
+html[data-skin='kissa'] .ks-glass-glitter {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='233' height='233'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.94  0 0 0 0 0.88  0 0 0 22 -16.2'/%3E%3C/filter%3E%3Crect width='233' height='233' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='311' height='311'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' seed='41' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.72  0 0 0 0 0.8  0 0 0 0 1  0 0 0 24 -18.4'/%3E%3C/filter%3E%3Crect width='311' height='311' filter='url(%23h)'/%3E%3C/svg%3E");
+  background-size: 233px 233px, 311px 311px;
+  opacity: 0.75;
+  -webkit-mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5) 30%, #000 80%);
+  mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5) 30%, #000 80%);
+}
+
+/* What the glass reflects: the CRT across the room, the cover's colour
+   under the sleeve, the candle's warmth. */
+html[data-skin='kissa'] .ks-glass-spill {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(18% 34% at 22% 40%, color-mix(in srgb, var(--ks-tint) 30%, transparent), transparent 75%),
+    radial-gradient(9% 26% at 30% 70%, rgba(255, 176, 104, 0.26), transparent 75%),
+    radial-gradient(24% 30% at 62% 18%, rgba(80, 110, 245, 0.12), transparent 75%),
+    radial-gradient(30% 40% at 86% 70%, rgba(240, 150, 110, 0.06), transparent 75%);
+  mix-blend-mode: screen;
+}
+
+html[data-skin='kissa'] .ks-glass-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 236, 222, 0.45) 22%, rgba(200, 214, 255, 0.5) 50%, rgba(255, 210, 180, 0.42) 76%, transparent),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent);
+  background-size: 100% 1px, 100% 100%;
+  background-repeat: no-repeat;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* ── The sleeve on its stand ───────────────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-stand {
+  position: absolute;
+  left: calc(var(--s) * 0.03);
+  top: 0;
+  width: calc(var(--s) * 0.94);
+  height: calc(var(--s) * 1.02);
+  z-index: 1;
+}
+
+html[data-skin='kissa'] .ks-sleeve {
+  position: absolute;
+  left: 0;
+  top: calc(var(--s) * 0.02);
+  width: calc(var(--s) * 0.94);
+  height: calc(var(--s) * 0.94);
+  border-radius: 1.5px;
+  overflow: hidden;
+  background: #1c1512;
+  transform: perspective(900px) rotateX(4deg);
+  transform-origin: 50% 100%;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 18px 38px -10px rgba(0, 0, 0, 0.85),
+    0 0 60px -12px color-mix(in srgb, var(--ks-tint) 34%, transparent);
+  -webkit-box-reflect: below calc(var(--s) * 0.075)
+    linear-gradient(180deg, transparent 72%, rgba(255, 255, 255, 0.14));
+}
+
+html[data-skin='kissa'] .ks-sleeve img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.94) contrast(1.03) brightness(0.94);
+}
+
+/* The bar's lights on a glossy jacket: warm from the left, a cooler sheen
+   from the CRT on the right, the lower corner in shade. */
+html[data-skin='kissa'] .ks-sleeve-light {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(122deg, rgba(255, 220, 190, 0.2), transparent 32%),
+    linear-gradient(240deg, rgba(150, 175, 255, 0.1), transparent 30%),
+    linear-gradient(160deg, transparent 55%, rgba(4, 2, 2, 0.42));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 230, 210, 0.08),
+    inset 0 1px 0 rgba(255, 236, 220, 0.28);
+  pointer-events: none;
+}
+
+html[data-skin='kissa'] .ks-sleeve-print {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 9% 10%;
+  background:
+    radial-gradient(70% 60% at 30% 20%, rgba(239, 178, 154, 0.22), transparent 70%),
+    linear-gradient(160deg, #2a1d18, #120c0a);
+}
+
+html[data-skin='kissa'] .ks-sleeve-mark {
+  font-family: var(--ks-silk);
+  font-size: 8px;
+  font-weight: 600;
+  font-stretch: 118%;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(242, 225, 207, 0.5);
+}
+
+html[data-skin='kissa'] .ks-sleeve-title {
+  font-family: var(--ks-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: calc(var(--s) * 0.15);
+  line-height: 1;
+  color: var(--ks-salmon);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+}
+
+/* The acrylic ledge the jacket rests on. */
+html[data-skin='kissa'] .ks-stand-lip {
+  position: absolute;
+  left: calc(var(--s) * -0.03);
+  right: calc(var(--s) * -0.03);
+  top: calc(var(--s) * 0.945);
+  height: calc(var(--s) * 0.05);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(255, 245, 238, 0.55), rgba(255, 240, 230, 0.12) 22%, rgba(210, 220, 255, 0.08) 60%, rgba(255, 255, 255, 0.22));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 245, 235, 0.18),
+    0 6px 12px -4px rgba(0, 0, 0, 0.7);
+}
+
+/* The little placard: 只今演奏中 — "now playing" — on salmon card. */
+html[data-skin='kissa'] .ks-stand-card {
+  position: absolute;
+  left: calc(var(--s) * 0.04);
+  top: calc(var(--s) * 1.04);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: calc(var(--s) * 0.022) calc(var(--s) * 0.05) calc(var(--s) * 0.026);
+  border-radius: 1px;
+  background: var(--ks-paper);
+  color: var(--ks-paper-ink);
+  transform: perspective(500px) rotateX(18deg) rotate(-2.5deg);
+  transform-origin: 50% 100%;
+  box-shadow: 0 8px 14px -6px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+}
+
+html[data-skin='kissa'] .ks-stand-card .ks-jp {
+  font-family: var(--ks-mincho);
+  font-size: clamp(9px, calc(var(--s) * 0.056), 15px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+html[data-skin='kissa'] .ks-stand-en {
+  font-family: var(--ks-silk);
+  font-size: clamp(6px, calc(var(--s) * 0.027), 8px);
+  font-weight: 600;
+  font-stretch: 118%;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/* ── The turntable ─────────────────────────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-table {
+  position: absolute;
+  left: calc(var(--s) * 1.02);
+  top: calc(var(--s) * 0.79);
+  width: var(--D);
+  height: calc(var(--D) * var(--k));
+  z-index: 2;
+}
+
+/* The plane of the counter: a square, squashed. Everything in it — the
+   record, the tonearm — turns in that plane. */
+html[data-skin='kissa'] .ks-plane {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--D);
+  height: var(--D);
+  transform: scaleY(var(--k));
+  transform-origin: 0 0;
+}
+
+/* The shadow the platter throws on the glass. */
+html[data-skin='kissa'] .ks-platter-shadow {
+  position: absolute;
+  inset: 4% -2% -6% 2%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.35) 80%, transparent);
+  filter: blur(10px);
+  transform: translateY(5%);
+}
+
+/* The crystal platter's top: a dark mat under the record, then the cut rim —
+   fine facets catching the room's light in turn. */
+html[data-skin='kissa'] .ks-platter-top {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 44.6%, rgba(0, 0, 0, 0.7) 44.8%, transparent 45.6%),
+    radial-gradient(circle, transparent 0 46.6%, rgba(255, 244, 234, 0.42) 47.2%, transparent 48%),
+    radial-gradient(circle, transparent 0 48.6%, rgba(255, 255, 255, 0.7) 49.4%, rgba(255, 255, 255, 0.2) 50%),
+    radial-gradient(circle, #0b0909 0 44.6%, transparent 44.7%),
+    repeating-conic-gradient(from 3deg, rgba(255, 250, 244, 0.5) 0deg 0.9deg, rgba(150, 160, 190, 0.1) 0.9deg 2.2deg, rgba(255, 224, 204, 0.28) 2.2deg 2.8deg, rgba(10, 10, 20, 0.3) 2.8deg 4deg),
+    radial-gradient(circle, rgba(70, 66, 74, 0.9) 45%, rgba(200, 200, 215, 0.4) 50%);
+  -webkit-mask-image: radial-gradient(circle, #000 0 49.7%, transparent 50%);
+  mask-image: radial-gradient(circle, #000 0 49.7%, transparent 50%);
+}
+
+/* The light lying on the rim, fixed in the room while the platter turns. */
+html[data-skin='kissa'] .ks-platter-top::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(28% 22% at 50% 98%, rgba(255, 236, 220, 0.55), transparent 70%),
+    radial-gradient(22% 30% at 98% 46%, rgba(190, 205, 255, 0.4), transparent 70%),
+    radial-gradient(26% 26% at 6% 30%, rgba(255, 190, 140, 0.4), transparent 70%);
+  -webkit-mask-image: radial-gradient(circle, transparent 0 44.6%, #000 45.4%);
+  mask-image: radial-gradient(circle, transparent 0 44.6%, #000 45.4%);
+  mix-blend-mode: screen;
+}
+
+/* The rim's side: the cut-crystal band that shows below the top, its
+   vertical facets crowding together toward the ends of the ellipse. */
+html[data-skin='kissa'] .ks-platter-side {
+  position: absolute;
+  left: 0;
+  top: calc(var(--s) * 0.05);
+  width: var(--D);
+  height: calc(var(--D) * var(--k));
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent 14%, transparent 86%, rgba(0, 0, 0, 0.55)),
+    radial-gradient(26% 80% at 50% 100%, rgba(255, 244, 236, 0.75), transparent 72%),
+    radial-gradient(18% 60% at 18% 90%, rgba(255, 196, 150, 0.45), transparent 72%),
+    radial-gradient(18% 60% at 86% 80%, rgba(190, 206, 255, 0.4), transparent 72%),
+    repeating-linear-gradient(90deg, rgba(255, 252, 248, 0.46) 0 1px, rgba(170, 180, 205, 0.12) 1px 4px, rgba(255, 230, 212, 0.26) 4px 5px, rgba(20, 20, 30, 0.34) 5px 8px),
+    rgba(160, 160, 180, 0.26);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 12px 20px -6px rgba(0, 0, 0, 0.85);
+}
+
+/* The record. Out of the sleeve whenever anything is loaded. */
+html[data-skin='kissa'] .ks-record {
+  position: absolute;
+  inset: 5.6%;
+  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease);
+}
+
+html[data-skin='kissa'] .ks-record .vinyl {
+  --disc: 100%;
+}
+
+html[data-skin='kissa'] .ks-record .vinyl-disc {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.7),
+    0 6px 14px rgba(0, 0, 0, 0.6),
+    inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+html[data-skin='kissa'] .ks-record .vinyl-label img {
+  filter: saturate(0.95) contrast(1.03);
+}
+
+html[data-skin='kissa'] .ks-record .vinyl-label-blank {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 62%, rgba(0, 0, 0, 0.18) 63% 66%, transparent 67%),
+    radial-gradient(circle at 42% 34%, #f08a62, #e0603a 62%, #b8462a 100%);
+}
+
+/* The lights of the bar lying across the grooves, fixed in the room. */
+html[data-skin='kissa'] .ks-record .vinyl-sheen {
+  background:
+    conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg 150deg,
+      rgba(255, 220, 190, 0.08) 166deg,
+      rgba(255, 238, 222, 0.34) 178deg,
+      rgba(255, 238, 222, 0.34) 182deg,
+      rgba(255, 220, 190, 0.08) 194deg,
+      transparent 210deg 330deg,
+      rgba(180, 196, 255, 0.05) 342deg,
+      rgba(200, 214, 255, 0.2) 358deg,
+      rgba(200, 214, 255, 0.2) 2deg,
+      rgba(180, 196, 255, 0.05) 18deg,
+      transparent 30deg
+    );
+}
+
+html[data-skin='kissa'] .ks-record.is-off {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
+/* ── The tonearm ───────────────────────────────────────────────────────── */
+
+/* It hangs from the pivot (top centre of the box) and swings clockwise in
+   over the record. Lifted, it rises off the groove and its shadow stays. */
+html[data-skin='kissa'] .ks-arm,
+html[data-skin='kissa'] .ks-arm-shadow {
+  position: absolute;
+  left: calc(var(--D) * 1.04);
+  top: calc(var(--D) * 0.05);
+  width: calc(var(--D) * 0.05);
+  height: calc(var(--D) * 0.74);
+  margin-left: calc(var(--D) * -0.025);
+  transform-origin: 50% 0;
+  transform: rotate(var(--ks-arm, 0deg));
+  transition: transform 2.2s var(--ease);
+}
+
+html[data-skin='kissa'] .ks-arm-shadow {
+  transform: translate(calc(var(--D) * 0.012), calc(var(--D) * 0.05)) rotate(var(--ks-arm, 0deg));
+  filter: blur(3px);
+  opacity: 0.55;
+}
+
+html[data-skin='kissa'] .ks-arm-shadow i {
+  position: absolute;
+  left: 40%;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  border-radius: 4px;
+  background: #000;
+}
+
+html[data-skin='kissa'] .kissa.is-lifted .ks-arm {
+  transform: translateY(calc(var(--D) * -0.06)) rotate(var(--ks-arm, 0deg));
+}
+
+html[data-skin='kissa'] .kissa.is-lifted .ks-arm-shadow {
+  transform: translate(calc(var(--D) * 0.03), calc(var(--D) * 0.1)) rotate(var(--ks-arm, 0deg));
+  opacity: 0.3;
+  filter: blur(6px);
+}
+
+html[data-skin='kissa'] .ks-arm-tube {
+  position: absolute;
+  left: 42%;
+  top: -4%;
+  width: 16%;
+  height: 96%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #6e6a6c, #f2ece6 38%, #b9b3b2 55%, #4a4648);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.6);
+}
+
+/* The counterweight, behind the pivot. */
+html[data-skin='kissa'] .ks-arm-weight {
+  position: absolute;
+  left: 14%;
+  top: -20%;
+  width: 72%;
+  height: 12%;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, #121012, #4b4749 40%, #2a2729 70%, #0c0b0c);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.8);
+}
+
+/* The headshell, angled in, with the stylus under its tip. */
+html[data-skin='kissa'] .ks-arm-head {
+  position: absolute;
+  left: -2%;
+  bottom: -9%;
+  width: 104%;
+  height: 15%;
+  border-radius: 2px 2px 4px 4px;
+  background: linear-gradient(90deg, #0d0c0d, #39363a 46%, #1a181a);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.8);
+  transform: rotate(24deg);
+  transform-origin: 50% 0;
+}
+
+html[data-skin='kissa'] .ks-arm-head::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  top: 30%;
+  width: 40%;
+  height: 40%;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #e9e1d8, #8d8683);
+  opacity: 0.85;
+}
+
+/* The pivot's bearing housing and the arm rest: upright, so drawn outside
+   the squashed plane. */
+html[data-skin='kissa'] .ks-pivot {
+  position: absolute;
+  left: calc(var(--D) * 1.04);
+  top: calc(var(--D) * var(--k) * 0.05);
+  width: calc(var(--s) * 0.15);
+  height: calc(var(--s) * 0.15);
+  transform: translate(-50%, -38%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, #5d585a 0 18%, #161415 20% 30%, transparent 31%),
+    radial-gradient(circle at 40% 30%, #4a4547, #141213 60%, #0a0909);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.28),
+    0 0 0 1px rgba(0, 0, 0, 0.7),
+    0 8px 14px -4px rgba(0, 0, 0, 0.8);
+}
+
+html[data-skin='kissa'] .ks-rest {
+  position: absolute;
+  left: calc(var(--D) * 1.04);
+  top: calc(var(--D) * var(--k) * 0.76);
+  width: calc(var(--s) * 0.05);
+  height: calc(var(--s) * 0.08);
+  transform: translate(-50%, -20%);
+  border-radius: 2px;
+  background: linear-gradient(90deg, #1b191a, #6b6668 50%, #1b191a);
+  box-shadow: 0 6px 8px -3px rgba(0, 0, 0, 0.8);
+}
+
+/* ── The candle in its cut-crystal cup ─────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-candle {
+  position: absolute;
+  left: calc(var(--s) * 0.64);
+  top: calc(var(--s) * 1.0);
+  width: calc(var(--s) * 0.24);
+  height: calc(var(--s) * 0.3);
+  z-index: 3;
+}
+
+html[data-skin='kissa'] .ks-candle-cup {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+  height: 62%;
+  border-radius: 14% 14% 22% 22% / 10% 10% 26% 26%;
+  background:
+    radial-gradient(60% 40% at 50% 26%, rgba(255, 200, 140, 0.55), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 248, 240, 0.34) 0 1px, rgba(255, 200, 160, 0.06) 1px 4px, rgba(40, 30, 30, 0.2) 4px 6px),
+    linear-gradient(180deg, rgba(255, 230, 210, 0.3), rgba(255, 190, 150, 0.14) 60%, rgba(255, 255, 255, 0.24));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 235, 0.6),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+    0 8px 14px -6px rgba(0, 0, 0, 0.8);
+}
+
+html[data-skin='kissa'] .ks-candle-flame {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  width: 10%;
+  height: 24%;
+  margin-left: -5%;
+  border-radius: 50% 50% 50% 50% / 64% 64% 36% 36%;
+  background: radial-gradient(circle at 50% 72%, #fff6e2, #ffcf86 40%, rgba(255, 150, 70, 0.6) 70%, transparent 74%);
+}
+
+html[data-skin='kissa'] .ks-candle-glow {
+  position: absolute;
+  left: -70%;
+  right: -70%;
+  top: -60%;
+  bottom: -30%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 186, 110, 0.32), rgba(255, 150, 90, 0.1) 50%, transparent 76%);
+  pointer-events: none;
+}
+
+html[data-skin='kissa'] .kissa.is-alive .ks-candle-glow {
+  animation: ks-breathe 7.5s ease-in-out infinite alternate;
+}
+
+html[data-skin='kissa'] .kissa.is-alive .ks-candle-flame {
+  animation: ks-sway 9s ease-in-out infinite alternate;
+}
+
+@keyframes ks-breathe {
+  from {
+    opacity: 0.82;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes ks-sway {
+  from {
+    transform: rotate(-2deg) scaleY(0.97);
+  }
+  to {
+    transform: rotate(2deg) scaleY(1.03);
+  }
+}
+
+/* ── A matchbook left on the glass ──────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-matches {
+  position: absolute;
+  left: calc(var(--s) * 2.3);
+  top: calc(var(--s) * 1.21);
+  width: calc(var(--s) * 0.3);
+  height: calc(var(--s) * 0.2);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, transparent 0 74%, rgba(255, 240, 225, 0.08) 74% 76%, transparent 76%),
+    linear-gradient(160deg, #241815, #120b0a);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 220, 190, 0.08),
+    0 6px 8px -3px rgba(0, 0, 0, 0.85);
+  transform: perspective(380px) rotateX(52deg) rotate(-13deg);
+  transform-origin: 50% 100%;
+}
+
+html[data-skin='kissa'] .ks-matches-mark {
+  font-family: var(--ks-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(6px, calc(var(--s) * 0.05), 13px);
+  line-height: 1;
+  color: #d9a066;
+  text-shadow: 0 0 6px rgba(240, 168, 104, 0.25);
+}
+
+html[data-skin='kissa'] .ks-matches-jp {
+  font-family: var(--ks-mincho);
+  font-size: clamp(4px, calc(var(--s) * 0.028), 8px);
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(217, 160, 102, 0.75);
+}
+
+/* ── Glints ────────────────────────────────────────────────────────────── */
+
+/* A four-point star where light hits a facet. Each one lights for about a
+   second and a half in a cycle of twenty to forty, so there is rarely more
+   than one at a time — and none at all unless the record is playing. */
+html[data-skin='kissa'] .ks-glints {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+html[data-skin='kissa'] .ks-glints i {
+  position: absolute;
+  width: calc(var(--s) * 0.2 * var(--s-g, 1));
+  height: calc(var(--s) * 0.2 * var(--s-g, 1));
+  opacity: 0;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 3%, rgba(255, 240, 225, 0.4) 9%, transparent 22%),
+    linear-gradient(90deg, transparent 2%, rgba(255, 246, 236, 0.75) 50%, transparent 98%) center / 100% 1.5px no-repeat,
+    linear-gradient(180deg, transparent 2%, rgba(255, 246, 236, 0.75) 50%, transparent 98%) center / 1.5px 100% no-repeat;
+  mix-blend-mode: screen;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+html[data-skin='kissa'] .kissa.is-alive .ks-glints i {
+  animation-name: ks-glint;
+}
+
+@keyframes ks-glint {
+  0%,
+  88% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  92% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1) rotate(9deg);
+  }
+  96%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.45) rotate(16deg);
+  }
+}
+
+/* ── The card: the title, as printed ───────────────────────────────────── */
+
+html[data-skin='kissa'] .ks-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+html[data-skin='kissa'] .ks-over {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-family: var(--ks-silk);
+  font-size: 10px;
+  font-weight: 500;
+  font-stretch: 116%;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ks-ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+html[data-skin='kissa'] .ks-over > span + span::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-right: 10px;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--ks-ink-ghost);
+}
+
+html[data-skin='kissa'] .ks-over-room {
+  color: var(--ks-amber);
+}
+
+html[data-skin='kissa'] .ks-title {
+  font-family: var(--ks-serif);
+  font-weight: 500;
+  font-size: clamp(28px, 6.4cqw, 54px);
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  color: var(--ks-ink);
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  text-shadow: 0 0 34px rgba(255, 170, 110, 0.14), 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+
+html[data-skin='kissa'] .ks-title.is-idle {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ks-ink-faint);
+}
+
+html[data-skin='kissa'] .ks-artist {
+  margin-top: 4px;
+  font-family: var(--ks-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 3cqw, 25px);
+  line-height: 1.2;
+  color: var(--ks-salmon);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 0.1em;
+}
+
+html[data-skin='kissa'] .ks-album {
+  margin-top: 6px;
+  font-family: var(--ks-silk);
+  font-size: 10px;
+  font-weight: 500;
+  font-stretch: 116%;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ks-ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE DECK'S VFD WINDOW (KissaDeck, in the faceplate)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+html[data-skin='kissa'] .ks-vfd {
+  flex: none;
+  margin-left: auto;
+}
+
+html[data-skin='kissa'] .ks-vfd-glass {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 300px;
+  padding: 12px 16px 12px;
+  border-radius: 4px;
+  background:
+    radial-gradient(90% 120% at 30% 0%, rgba(90, 160, 200, 0.07), transparent 70%),
+    linear-gradient(180deg, #05090b, #030506);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.9),
+    inset 0 2px 8px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 240, 225, 0.07),
+    0 0 0 3px #0b0908,
+    0 0 0 4px rgba(255, 240, 225, 0.05);
+}
+
+/* The smoked glass over it: one soft reflection, a fine mesh. */
+html[data-skin='kissa'] .ks-vfd-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.06), transparent 38%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+html[data-skin='kissa'] .ks-vfd-row {
+  display: flex;
+  align-items: center;
+}
+
+html[data-skin='kissa'] .ks-vfd-legends {
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--ks-silk);
+  font-size: 7.5px;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+html[data-skin='kissa'] .ks-vfd-legends span {
+  color: rgba(166, 233, 255, 0.13);
+  transition: color 0.9s var(--ease), text-shadow 0.9s var(--ease);
+}
+
+html[data-skin='kissa'] .ks-vfd-legends span.is-lit {
+  color: var(--ks-vfd);
+  text-shadow: 0 0 6px rgba(120, 210, 255, 0.55);
+}
+
+html[data-skin='kissa'] .ks-vfd-main {
+  gap: 8px;
+}
+
+html[data-skin='kissa'] .ks-vfd-cap {
+  font-family: var(--ks-silk);
+  font-size: 7.5px;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(166, 233, 255, 0.55);
+  align-self: flex-start;
+}
+
+html[data-skin='kissa'] .ks-vfd-text {
+  display: block;
+  overflow: visible;
+}
+
+html[data-skin='kissa'] .ks-vfd-off {
+  fill: rgba(166, 233, 255, 0.055);
+}
+
+html[data-skin='kissa'] .ks-vfd-on {
+  fill: var(--ks-vfd);
+  filter: drop-shadow(0 0 1.6px rgba(130, 215, 255, 0.85));
+}
+
+html[data-skin='kissa'] .ks-vfd-dim {
+  fill: rgba(166, 233, 255, 0.42);
+}
+
+html[data-skin='kissa'] .ks-vfd-clock {
+  margin-left: auto;
+}
+
+html[data-skin='kissa'] .ks-meters {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+html[data-skin='kissa'] .ks-meter {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+html[data-skin='kissa'] .ks-meter-ch {
+  width: 7px;
+  font-family: var(--ks-silk);
+  font-size: 7.5px;
+  font-weight: 600;
+  color: rgba(166, 233, 255, 0.55);
+}
+
+/* Twenty-two segments, the last four the hot zone; unlit ones faintly there. */
+html[data-skin='kissa'] .ks-meter-track {
+  position: relative;
+  flex: 1;
+  height: 5px;
+  container-type: inline-size;
+  background:
+    repeating-linear-gradient(90deg, rgba(166, 233, 255, 0.07) 0 calc(100% / 22 - 2px), transparent calc(100% / 22 - 2px) calc(100% / 22));
+}
+
+html[data-skin='kissa'] .ks-meter-lit {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 100% 0 0);
+  background: linear-gradient(90deg, var(--ks-vfd) 0 81.8%, #ffb38a 81.8%);
+}
+
+/* Fixed segments over the whole track; the lit bar is clipped, never scaled,
+   so the hot zone stays where it is printed. */
+html[data-skin='kissa'] .ks-meter-track {
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 calc(100% / 22 - 2px), transparent calc(100% / 22 - 2px) calc(100% / 22));
+  mask-image: repeating-linear-gradient(90deg, #000 0 calc(100% / 22 - 2px), transparent calc(100% / 22 - 2px) calc(100% / 22));
+  filter: drop-shadow(0 0 2px rgba(130, 215, 255, 0.5));
+}
+
+html[data-skin='kissa'] .ks-meter-peak {
+  position: absolute;
+  left: -3px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ks-vfd);
+  opacity: 0;
+}
+
+html[data-skin='kissa'] .ks-meter-scale {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 14px;
+  font-family: var(--ks-silk);
+  font-size: 6.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(166, 233, 255, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-skin='kissa'] .ks-glints i,
+  html[data-skin='kissa'] .ks-candle-glow,
+  html[data-skin='kissa'] .ks-candle-flame {
+    animation: none !important;
+  }
+
+  html[data-skin='kissa'] .ks-arm,
+  html[data-skin='kissa'] .ks-arm-shadow,
+  html[data-skin='kissa'] .ks-record {
+    transition: none;
+  }
+}

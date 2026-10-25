@@ -352,6 +352,13 @@ const LOOK: Record<Skin, { ground: string; ink: string; font: CSSProperties; str
     font: { fontFamily: "'IBM Plex Serif', Georgia, serif", fontWeight: 300, fontStyle: 'italic', letterSpacing: '-0.02em' },
     strip: ['#eeebe4', '#d0cbc1', '#3b3a36', '#e8794f', '#8daa82'],
   },
+  kissa: {
+    ground:
+      'radial-gradient(18% 22% at 22% 28%, rgba(255,170,110,0.55), transparent 70%), radial-gradient(14% 18% at 74% 22%, rgba(240,150,120,0.4), transparent 70%), radial-gradient(30% 26% at 60% 62%, rgba(70,100,235,0.32), transparent 72%), linear-gradient(180deg, #120d0a, #070504)',
+    ink: '#f1d6c4',
+    font: { fontFamily: "'Cormorant Garamond', 'Hiragino Mincho ProN', Georgia, serif", fontWeight: 500, fontStyle: 'italic' },
+    strip: ['#0a0706', '#e8a06a', '#efb59c', '#4f6ef0', '#a9e8ff'],
+  },
 };
 
 function Appearance() {
