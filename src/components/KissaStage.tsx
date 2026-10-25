@@ -214,6 +214,7 @@ export default function KissaStage() {
             <div className={`ks-record${idle ? ' is-off' : ''}`}>
               <Vinyl art={art} playing={!!playing} title={title} onArtError={() => setArtBroken(track?.art)} />
             </div>
+            <i className="ks-armboard" />
             <div className="ks-arm-shadow">
               <i />
             </div>
@@ -224,6 +225,7 @@ export default function KissaStage() {
             </div>
           </div>
           <i className="ks-pivot" />
+          <i className={`ks-cue${lifted ? ' is-up' : ''}`} />
           <i className="ks-rest" />
         </div>
 

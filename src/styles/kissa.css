@@ -476,6 +476,55 @@ html[data-skin='kissa'] .ks-arm-head::after {
   opacity: 0.85;
 }
 
+/* The armboard: a brushed black plate under the pivot and the rest, lying in
+   the plane of the counter. */
+html[data-skin='kissa'] .ks-armboard {
+  position: absolute;
+  left: calc(var(--D) * 0.975);
+  top: calc(var(--D) * -0.04);
+  width: calc(var(--D) * 0.13);
+  height: calc(var(--D) * 0.9);
+  border-radius: calc(var(--D) * 0.025);
+  background:
+    radial-gradient(80% 30% at 30% 4%, rgba(255, 236, 220, 0.1), transparent 70%),
+    linear-gradient(180deg, #1b1818, #0d0b0b);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 240, 225, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* The cue lever beside the pivot: down while playing, up when paused. */
+html[data-skin='kissa'] .ks-cue {
+  position: absolute;
+  left: calc(var(--D) * 1.11);
+  top: calc(var(--D) * var(--k) * 0.3);
+  width: calc(var(--s) * 0.022);
+  height: calc(var(--s) * 0.075);
+  border-radius: 2px;
+  background: linear-gradient(90deg, #2a2627, #8c8587 50%, #2a2627);
+  transform: translate(-50%, -100%) rotate(-28deg);
+  transform-origin: 50% 100%;
+  transition: transform 900ms var(--ease);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.7);
+}
+
+html[data-skin='kissa'] .ks-cue::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 260%;
+  height: 34%;
+  transform: translate(-50%, -40%);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #5c5658, #1a1718);
+}
+
+html[data-skin='kissa'] .ks-cue.is-up {
+  transform: translate(-50%, -100%) rotate(18deg);
+}
+
 /* The pivot's bearing housing and the arm rest: upright, so drawn outside
    the squashed plane. */
 html[data-skin='kissa'] .ks-pivot {
@@ -952,6 +1001,7 @@ html[data-skin='kissa'] .ks-meter-scale {
 
   html[data-skin='kissa'] .ks-arm,
   html[data-skin='kissa'] .ks-arm-shadow,
+  html[data-skin='kissa'] .ks-cue,
   html[data-skin='kissa'] .ks-record {
     transition: none;
   }
