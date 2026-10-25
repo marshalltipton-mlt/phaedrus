@@ -48,6 +48,22 @@ html[data-skin='kissa'] .ks-glass {
   mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
 }
 
+/* The front of the bar under the glass edge: lacquer falling away into the
+   dark, so the room behind stops at the counter. */
+html[data-skin='kissa'] .ks-scene::after {
+  content: '';
+  position: absolute;
+  left: -9%;
+  right: -9%;
+  top: calc(100% + var(--s) * 0.02);
+  height: calc(var(--s) * 0.42);
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(8, 5, 4, 0.9), rgba(8, 5, 4, 0.55) 40%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  pointer-events: none;
+}
+
 /* Glitter: two noise tiles thresholded into sparse specks (no grid can show),
    fading toward the back of the counter. Static. */
 html[data-skin='kissa'] .ks-glass-glitter {
@@ -116,7 +132,7 @@ html[data-skin='kissa'] .ks-sleeve {
     0 18px 38px -10px rgba(0, 0, 0, 0.85),
     0 0 60px -12px color-mix(in srgb, var(--ks-tint) 34%, transparent);
   -webkit-box-reflect: below calc(var(--s) * 0.075)
-    linear-gradient(180deg, transparent 72%, rgba(255, 255, 255, 0.14));
+    linear-gradient(180deg, transparent 58%, rgba(255, 255, 255, 0.24));
 }
 
 html[data-skin='kissa'] .ks-sleeve img {
@@ -660,6 +676,12 @@ html[data-skin='kissa'] .kissa.is-alive .ks-glints i {
 }
 
 /* ── The card: the title, as printed ───────────────────────────────────── */
+
+/* Above the counter's front shade, which falls a little way below the scene. */
+html[data-skin='kissa'] .kissa > :not(.ks-scene) {
+  position: relative;
+  z-index: 1;
+}
 
 html[data-skin='kissa'] .ks-card {
   display: flex;

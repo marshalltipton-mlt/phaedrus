@@ -674,11 +674,12 @@ html[data-skin='kissa'] .panel:has(> .queue) {
   border-radius: 2px;
   color: var(--ks-paper-ink);
   background:
+    linear-gradient(180deg, transparent calc(36% - 1px), rgba(255, 244, 236, 0.32) calc(36% - 1px), rgba(255, 244, 236, 0.32) 36%, rgba(80, 30, 18, 0.12) 36%, transparent calc(36% + 7px)),
     radial-gradient(120% 50% at 50% 0%, rgba(255, 236, 224, 0.28), transparent 70%),
     linear-gradient(180deg, transparent 60%, rgba(60, 20, 10, 0.22)),
     var(--ks-tooth),
     linear-gradient(180deg, var(--ks-paper-lit), var(--ks-paper) 40%, #dc9f87);
-  background-size: auto, auto, 180px 180px, auto;
+  background-size: auto, auto, auto, 180px 180px, auto;
   box-shadow:
     0 1px 0 rgba(255, 240, 230, 0.4) inset,
     0 22px 40px -16px rgba(0, 0, 0, 0.9),

@@ -71,6 +71,7 @@ device.
 | Deck | DJ controller, orange LEDs, red waveforms |
 | Prism | Light through glass, a spectrum on the wall (in progress) |
 | Putty | Soft hardware, warm greys, a little grain (design: Zoe, brief in `docs/skins/putty.md`) |
+| Kissa | A Tokyo listening bar at 1 a.m.: a crystal turntable, a menu card, a cassette wall (`docs/skins/kissa.md`) |
 
 ## How discovery works
 

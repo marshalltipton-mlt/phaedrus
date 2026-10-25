@@ -199,8 +199,10 @@ export default function KissaStage() {
           </div>
           <i className="ks-stand-lip" />
           <span className="ks-stand-card">
-            <span className="ks-jp">只今演奏中</span>
-            <span className="ks-stand-en">Now playing</span>
+            {/* 只今演奏中, "now playing"; with nothing on, 準備中, the sign a shop
+                hangs on its door while it gets ready. */}
+            <span className="ks-jp">{idle ? '準備中' : '只今演奏中'}</span>
+            <span className="ks-stand-en">{idle ? 'Between records' : 'Now playing'}</span>
           </span>
         </div>
 
